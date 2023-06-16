@@ -1,0 +1,87 @@
+D:\my work\cl\Product management\bin\Debug\net6.0\appsettings.Development.json
+D:\my work\cl\Product management\bin\Debug\net6.0\appsettings.json
+D:\my work\cl\Product management\bin\Debug\net6.0\Product management.staticwebassets.runtime.json
+D:\my work\cl\Product management\bin\Debug\net6.0\Product management.exe
+D:\my work\cl\Product management\bin\Debug\net6.0\Product management.deps.json
+D:\my work\cl\Product management\bin\Debug\net6.0\Product management.runtimeconfig.json
+D:\my work\cl\Product management\bin\Debug\net6.0\Product management.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Product management.pdb
+D:\my work\cl\Product management\obj\Debug\net6.0\Product management.csproj.AssemblyReference.cache
+D:\my work\cl\Product management\obj\Debug\net6.0\Product management.GeneratedMSBuildEditorConfig.editorconfig
+D:\my work\cl\Product management\obj\Debug\net6.0\Product management.AssemblyInfoInputs.cache
+D:\my work\cl\Product management\obj\Debug\net6.0\Product management.AssemblyInfo.cs
+D:\my work\cl\Product management\obj\Debug\net6.0\Product management.csproj.CoreCompileInputs.cache
+D:\my work\cl\Product management\obj\Debug\net6.0\Product management.MvcApplicationPartsAssemblyInfo.cache
+D:\my work\cl\Product management\obj\Debug\net6.0\Product management.RazorAssemblyInfo.cache
+D:\my work\cl\Product management\obj\Debug\net6.0\Product management.RazorAssemblyInfo.cs
+D:\my work\cl\Product management\obj\Debug\net6.0\staticwebassets\msbuild.Product management.Microsoft.AspNetCore.StaticWebAssets.props
+D:\my work\cl\Product management\obj\Debug\net6.0\staticwebassets\msbuild.build.Product management.props
+D:\my work\cl\Product management\obj\Debug\net6.0\staticwebassets\msbuild.buildMultiTargeting.Product management.props
+D:\my work\cl\Product management\obj\Debug\net6.0\staticwebassets\msbuild.buildTransitive.Product management.props
+D:\my work\cl\Product management\obj\Debug\net6.0\staticwebassets.pack.json
+D:\my work\cl\Product management\obj\Debug\net6.0\staticwebassets.build.json
+D:\my work\cl\Product management\obj\Debug\net6.0\staticwebassets.development.json
+D:\my work\cl\Product management\obj\Debug\net6.0\scopedcss\Views\Shared\_Layout.cshtml.rz.scp.css
+D:\my work\cl\Product management\obj\Debug\net6.0\scopedcss\bundle\Product management.styles.css
+D:\my work\cl\Product management\obj\Debug\net6.0\scopedcss\projectbundle\Product management.bundle.scp.css
+D:\my work\cl\Product management\obj\Debug\net6.0\Product management.dll
+D:\my work\cl\Product management\obj\Debug\net6.0\refint\Product management.dll
+D:\my work\cl\Product management\obj\Debug\net6.0\Product management.pdb
+D:\my work\cl\Product management\obj\Debug\net6.0\Product management.genruntimeconfig.cache
+D:\my work\cl\Product management\obj\Debug\net6.0\ref\Product management.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Azure.Core.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Azure.Identity.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.Bcl.AsyncInterfaces.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.Data.SqlClient.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Abstractions.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Relational.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.SqlServer.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.Extensions.Caching.Abstractions.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.Extensions.Caching.Memory.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.Extensions.Configuration.Abstractions.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.Extensions.Logging.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.Extensions.Logging.Abstractions.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.Extensions.Options.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.Extensions.Primitives.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.Identity.Client.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.Identity.Client.Extensions.Msal.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.IdentityModel.Abstractions.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.IdentityModel.JsonWebTokens.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.IdentityModel.Logging.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.IdentityModel.Tokens.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.SqlServer.Server.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.Win32.SystemEvents.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\System.Configuration.ConfigurationManager.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\System.Drawing.Common.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\System.IdentityModel.Tokens.Jwt.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\System.Memory.Data.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\System.Runtime.Caching.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\System.Security.Cryptography.ProtectedData.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\System.Security.Permissions.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\System.Windows.Extensions.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.1\Microsoft.Data.SqlClient.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\runtimes\win-arm\native\Microsoft.Data.SqlClient.SNI.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\runtimes\win-arm64\native\Microsoft.Data.SqlClient.SNI.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\runtimes\win-x64\native\Microsoft.Data.SqlClient.SNI.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\runtimes\win-x86\native\Microsoft.Data.SqlClient.SNI.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\Microsoft.Win32.SystemEvents.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\runtimes\unix\lib\netcoreapp3.0\System.Drawing.Common.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\System.Drawing.Common.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Runtime.Caching.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\runtimes\win\lib\netcoreapp3.0\System.Windows.Extensions.dll
+D:\my work\cl\Product management\obj\Debug\net6.0\Product management.csproj.CopyComplete
+D:\my work\cl\Product management\bin\Debug\net6.0\Humanizer.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.EntityFrameworkCore.Design.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Microsoft.Extensions.DependencyModel.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Mono.TextTemplating.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\System.CodeDom.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\System.Text.Encodings.Web.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\System.Text.Json.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\runtimes\browser\lib\net6.0\System.Text.Encodings.Web.dll

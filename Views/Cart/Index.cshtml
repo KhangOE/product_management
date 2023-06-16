@@ -1,0 +1,98 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    var total = Model.Sum(x => x.price);
+    var info = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+}
+@using Product_management.ModelView;
+@model List<CartViewModel>
+<div>cart @(Model.Count )</div>
+
+
+<table class="table"> 
+
+    <thead>
+        <td>
+            id
+        </td>
+    <td>
+        Name
+    </td>
+    <td>
+        price
+    </td>
+    <td>
+
+        quantity
+    </td>
+    <td>
+        priceall
+    </td>
+    </thead>
+
+    <tbody>
+        @foreach(var x in Model)
+        {
+            <tr><td>
+             @x.Id
+            </td>
+                <td>
+                    @x.productName
+                </td>
+                <td>
+                    @(String.Format(info, "{0:c}", x.price1))
+                    
+                </td>
+                <td class="d-flex gap-4">
+
+                    @using (Html.BeginForm("down", "Cart", new { id = x.Id }, FormMethod.Post))
+                    {
+                        <input type="submit" value="-" />
+                    }
+                    @x.quantity
+                    @using (Html.BeginForm("up", "Cart", new { id = x.Id }, FormMethod.Post))
+                    {
+                        <input type="submit" value="+" />
+                    }
+                <td>
+                        @(String.Format(info, "{0:c}", x.price))
+                        
+                </td>
+                </td>
+            </tr>
+        }
+        
+    </tbody>
+</table>
+    
+
+
+    
+
+        <form method="post" action="@Url.Action("Create", "Order")">
+            <!-- Include additional fields for the order -->
+            <label for="UserId">Customer Id:</label>
+
+
+            <input type="text" id="UserId" name="UserId"   />
+
+
+            @for (int i = 0; i < Model.Count ; i++)
+            {
+             
+                    <input class="visually-hidden" type="text" name="OrderItem[@i].productId" value="@Model[i].ProductId" />
+        <input class="visually-hidden" type="text" name="OrderItem[@i].Quantity" value="@Model[i].quantity" />
+               
+            }
+            
+
+            <input type="submit" value="SUBMIT" />
+            @Html.AntiForgeryToken();
+        </form>
+        <div class="w-100 text-end fw-bold px-4">
+    @(String.Format(info, "{0:c}", total))
+   
+</div>
+    
+</div>

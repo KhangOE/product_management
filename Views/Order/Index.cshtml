@@ -1,0 +1,70 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+
+    var maxId = Model.Count > 0 ? Model[0].IdH : -1;
+    var maxUserId = Model.Count > 0 ? Model[0].HUserId : -1;
+    var maxUserTotal = Model.Count > 0 ? Model[0].highestUserTotal : -1;
+
+    
+    var month = DateTime.Now.Month;
+    var info = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+}
+@using Product_management.ModelView;
+@model List<OrderViewModel>
+<div class="text-danger">
+    <div class="fw-bolder"> 
+        IdUser Order nhiều lần nhất tháng @month : @maxUserId  (@maxUserTotal)
+    </div>
+
+    <div class="fw-bolder">
+        ID Order có total cao nhất tháng  @month  @maxId
+    </div>
+    <div> 
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Name </th>
+                    <th scope="col"> quantity</th>
+                <th scope="col">Price</th>
+               
+            </tr>
+        </thead>
+    @foreach(var m in Model)
+    {
+        <div>
+           
+            
+            <div class="">
+            <tr class="@(m.id == Model[0].IdH ? "bg-black text-white" : "")">
+                <td>@m.id</td> 
+                    <td></td>
+                <td> @m.date</td> 
+                </tr>
+                        @foreach (var p in m.OrderDetails)
+                {
+                    
+                    <tr class="bg-light">
+                        <td>@p.Name</td>
+                        <td>@p.quantity</td>
+                        <td>
+                                    @(String.Format(info, "{0:c}", p.price))
+                            </td>
+                    </tr>
+                }
+            <tr class="bg-primary text-white fw-bold">
+                <td>userId = @m.UserId</td>
+                    <td>  </td>
+                    <td> Tổng =  @(String.Format(info, "{0:c}", m.Total))</td>
+               </tr>
+           </div>
+
+        </div>
+       
+      
+    }
+
+    </table>
+</div>

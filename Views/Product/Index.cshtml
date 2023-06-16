@@ -1,0 +1,56 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+    var info = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+}
+@using Product_management.ModelView;
+@model List<ProductViewModel>
+
+<table class="table">
+    <a class="fw-bolder text-warning" asp-action="Create" >Add Product</a> |
+    <thead>
+        <tr>
+            <th scope="col">id</th>
+            <th scope="col">Name</th>
+            <th scope="col">Price</th>
+            <th scope="col">Bought</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr class="@(product.Id == product.Hbougth ? "bg-black text-white" : "")">
+                <td>@product.Id</td>
+                <th scope="row">@product.Name</th>
+                <td> @(String.Format(info, "{0:c}", product.Price))</td>
+                   <td>@product.bougth</td>
+                <td class="d-flex gap-2">
+                    <a class="border-1 bg-light py- px-2 border-black"  asp-action="Edit" asp-route-id="@product.Id">Edit</a> |
+                    
+                    
+                    @using (Html.BeginForm("Delete", "Product", new { id = product.Id }, FormMethod.Post))
+                    {
+                        <input  type="submit" value="Delete" />
+                    }
+
+                    <form method="post" action="@Url.Action("Create", "Cart")">
+                        <!-- Include additional fields for the order -->
+                        
+                        <input class="visually-hidden" type="text" id="UserId" name="ProductId" value="@product.Id" />
+                        <input class="visually-hidden" type="text" id="UserId" name="quantity" value=1 />
+                        <input  type="submit" value="Add to cart" />
+                        @Html.AntiForgeryToken();
+                    </form>
+                </td>
+               
+            </tr>
+
+        }
+        
+       
+    </tbody>
+</table>
+<div></div>
