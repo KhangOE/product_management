@@ -6,9 +6,9 @@ namespace Product_management.Interface
     {
         User GetUserById(int id);
         ICollection<User> GetUsers();
-        bool CreateUser(User user);
-        bool UpdateUser(User user);
-        bool DeleteUser(User user);
-        bool Save();
+        void CreateUser(User user);
+        void UpdateUser(User user);
+        void DeleteUser(User user);
+      
     }
 }

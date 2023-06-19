@@ -21,7 +21,6 @@ namespace Product_management.Repository
                 .Include(x => x.OrderDetails)
                 .ThenInclude(x => x.Order)
                 .ToList();
-
         }
 
         public Product GetProductById(int id)
@@ -29,25 +28,20 @@ namespace Product_management.Repository
             return _context.Products.FirstOrDefault(x => x.Id== id);
         }
 
-        public bool DeleteProduct(Product product)
+        public void DeleteProduct(Product product)
         {
             _context.Products.Remove( product );
-            return Save();
+            
         }
-        public bool CreateProduct(Product product)
+        public void CreateProduct(Product product)
         {
 
            _context.Products.Add(product);
-            return Save();
+           
         }
-        public bool UpdateProduct(Product product) { 
+        public void UpdateProduct(Product product) { 
             _context.Update(product);
-            return Save();
+            
         }
-        public bool Save()
-        {
-            var saved = _context.SaveChanges();
-            return saved > 0 ? true : false;
-        } 
     }
 }

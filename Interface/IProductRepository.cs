@@ -6,9 +6,9 @@ namespace Product_management.Interface
     {
         ICollection<Product> GetAll();
         Product GetProductById(int id);
-        bool DeleteProduct(Product product);
-        bool CreateProduct(Product product);
-        bool UpdateProduct(Product product);
-        bool Save(); 
+        void DeleteProduct(Product product);
+        void CreateProduct(Product product);
+        void UpdateProduct(Product product);
+       
     }
 }

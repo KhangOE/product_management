@@ -4,53 +4,38 @@ using Product_management.Interface;
 using Product_management.Models;
 using Product_management.ModelView;
 using Product_management.Repository;
+using Product_management.unitOfWork;
 
 namespace Product_management.Controllers
 {
     public class CartController : Controller
     {
-        // GET: HomeController1
-        private readonly IProductRepository _productRepository;
-        private readonly ICartRepositorycs _cartRepository;
+        
+       
+        private readonly IUnitOfWork _unitOfWork;
 
-        public CartController (IProductRepository productRepository, ICartRepositorycs cartRepository)
+        public CartController (IUnitOfWork unitOfWork)
         {
-            _productRepository = productRepository;
-            _cartRepository = cartRepository;
+            _unitOfWork = unitOfWork;
         }
         public ActionResult Index()
         {
-            var products = _productRepository.GetAll().ToList();
-            var x = _productRepository.GetProductById(1);
-            List<CartViewModel> cartViewModel = _cartRepository.GetAll().Select(x => new CartViewModel()
+           // var products = _productRepository.GetAll().ToList();
+            //var x = _productRepository.GetProductById(1);
+            List<CartViewModel> cartViewModel = _unitOfWork.cartRepositorycs
+                .GetAll()
+                .Select(x => new CartViewModel()
             {
                 Id = x.Id,
-                productName = _productRepository.GetProductById(x.ProductId).Name,
-                price1 = _productRepository.GetProductById(x.ProductId).Price,
+                productName = _unitOfWork.ProductRepository.GetProductById(x.ProductId).Name,
+                price1 = _unitOfWork.ProductRepository.GetProductById(x.ProductId).Price,
                 quantity = x.quantity,
                 ProductId = x.ProductId,
-                price = _productRepository.GetProductById(x.ProductId).Price * x.quantity,
-
+                price = _unitOfWork.ProductRepository.GetProductById(x.ProductId).Price * x.quantity,
             }).ToList();
-
-            List<Cart> carts = _cartRepository.GetAll().ToList();
-             //var product = _productRepository.GetProductById(carts[0].ProductId);
             return View(cartViewModel);
         }
 
-        // GET: HomeController1/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-        // GET: HomeController1/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: HomeController1/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind("ProductId,quantity")] Cart cart)
@@ -58,33 +43,24 @@ namespace Product_management.Controllers
             try
 
             {
-                var x = _cartRepository.GetAll().FirstOrDefault(item => item.ProductId == cart.ProductId);
-                //var check = _cartRepository.GetAll().Where(x => x.ProductId == cart.ProductId).FirstOrDefault();
-                if(x != null)
+                var cartItem = _unitOfWork.cartRepositorycs
+                    .GetAll()
+                    .FirstOrDefault(item => item.ProductId == cart.ProductId);
+                if(cartItem != null)
                 {
 
-                    var cartToUpdate = _cartRepository.GetAll().FirstOrDefault(x => x.ProductId == cart.ProductId);
+                    var cartToUpdate = _unitOfWork.cartRepositorycs
+                        .GetAll()
+                        .FirstOrDefault(x => x.ProductId == cart.ProductId);
                     cartToUpdate.quantity += 1 ;
-                    _cartRepository.UpdateCart(cartToUpdate);
+                    _unitOfWork.cartRepositorycs.UpdateCart(cartToUpdate);
+                    _unitOfWork.Save();
                 }
                 else
                 {
-                    _cartRepository.CreateCart(cart);
+                    _unitOfWork.cartRepositorycs.CreateCart(cart);
+                    _unitOfWork.Save();
                 }
-                /* var checkCard = _cartRepository.GetAll().Where(x => x.Product.Id == cart.Id).FirstOrDefault();
-
-                 if (checkCard == null)
-                 {
-                     cart.quantity = 1;
-                     cart.
-                 }
-                /* else
-                 {
-                     cart.quantity += 1;
-                     _cartRepository.UpdateCart(cart);
-                 }
-                 /* 
-                 */
                 return RedirectToAction("Index", "Product"); ;
             }
             catch
@@ -93,37 +69,16 @@ namespace Product_management.Controllers
             }
         }
 
-        // GET: HomeController1/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: HomeController1/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Up(int id, IFormCollection collection)
         {
             try
             {
-                var cartToUpdate = _cartRepository.GetCartById(id);
+                var cartToUpdate = _unitOfWork.cartRepositorycs.GetCartById(id);
                 cartToUpdate.quantity += 1;
-                _cartRepository.UpdateCart(cartToUpdate);
+                _unitOfWork.cartRepositorycs.UpdateCart(cartToUpdate);
+                _unitOfWork.Save();
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -136,34 +91,17 @@ namespace Product_management.Controllers
         {
             try
             {
-                var cartToUpdate = _cartRepository.GetCartById(id);
+                var cartToUpdate = _unitOfWork.cartRepositorycs.GetCartById(id);
                 cartToUpdate.quantity -= 1;
                 if(cartToUpdate.quantity == 0) {
-                _cartRepository.DeleteCart(cartToUpdate);
+                    _unitOfWork.cartRepositorycs.DeleteCart(cartToUpdate);
+                    _unitOfWork.Save();
                 }
-                else { _cartRepository.UpdateCart(cartToUpdate); }
+                else {
+                    _unitOfWork.cartRepositorycs.UpdateCart(cartToUpdate);
+                    _unitOfWork.Save();
+                }
               
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: HomeController1/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: HomeController1/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
                 return RedirectToAction(nameof(Index));
             }
             catch

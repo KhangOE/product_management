@@ -28,7 +28,7 @@ namespace Product_management.Repository
             return _dataContext.Orders.FirstOrDefault(o => o.Id == id);
         }
 
-        public bool CreateOrder(Order order,List<OrderItemViewModel> orderItemViewModels)
+        public void CreateOrder(Order order,List<OrderItemViewModel> orderItemViewModels)
 
         {
             //    var order = new Order();
@@ -50,14 +50,7 @@ namespace Product_management.Repository
             // _dataContext.Add()
             _dataContext.Add(order);
             _dataContext.SaveChanges();
-
-
-            return Save();
         }
-        public bool Save()
-        {
-            var saved = _dataContext.SaveChanges();
-            return saved > 0 ? true : false;
-        }
+        
     }
 }

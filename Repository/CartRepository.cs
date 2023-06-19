@@ -7,7 +7,7 @@ namespace Product_management.Repository
 {
     public class CartRepository : ICartRepositorycs
     {
-        DataContext _dataContext;
+        private DataContext _dataContext;
 
         public CartRepository(DataContext dataContext)
         {
@@ -19,32 +19,25 @@ namespace Product_management.Repository
             return  _dataContext.Carts.ToList();
         }
 
-        public bool DeleteCart(Cart cart)
+        public void DeleteCart(Cart cart)
         {
             _dataContext.Remove(cart);
-            return Save();
+          
 
         }
-        public bool CreateCart(Cart cart)
+        public void CreateCart(Cart cart)
         {
            _dataContext.Carts.Add(cart);
-            return Save();
+          
         }
         public Cart  GetCartById(int id)
         {
             return _dataContext.Carts.FirstOrDefault(x => x.Id == id);
         }
-        public bool UpdateCart(Cart cart)
+        public void UpdateCart(Cart cart)
         {
             _dataContext.Carts.Update(cart);
-            return Save();
         }
-        
-
-        public bool Save()
-        {
-            var saved = _dataContext.SaveChanges();
-            return saved > 0 ? true : false;
-        }
+    
     }
 }

@@ -4,24 +4,26 @@ using Product_management.Data;
 using Product_management.Interface;
 using Product_management.Models;
 using Product_management.ModelView;
+using Product_management.unitOfWork;
+
 namespace Product_management.Controllers
 {
     public class UserController : Controller
     {
         // GET: HomeController1
 
-        private readonly IUserRepository _userRepository;
-        private readonly DataContext _dataContext;
-        public UserController(IUserRepository userRepository, DataContext datacontext)
+       
+        private readonly IUnitOfWork _unitOfWork;
+        public UserController(IUnitOfWork unitOfWork)
         {
-            _userRepository = userRepository;
-            _dataContext = datacontext;
+           
+            _unitOfWork = unitOfWork;
             
         }
         public ActionResult Index()
         {
           
-            var users = _userRepository.GetUsers().ToList();
+            var users = _unitOfWork.UserRepository.GetUsers().ToList();
 
             var currentTime = DateTime.Now;
 
@@ -37,7 +39,7 @@ namespace Product_management.Controllers
 
 
 
-            List<UserItemViewModel> userIteViewModels = users.Select(x => new UserItemViewModel
+            List<UserItemViewModel> userItemViewModels = users.Select(x => new UserItemViewModel
             {
                 Name = x.Name,
                 Id = x.Id,
@@ -45,46 +47,32 @@ namespace Product_management.Controllers
             }).ToList();
 
             UserViewModel viewModel = new UserViewModel() { 
-            userItemViewModels = userIteViewModels,
-            HighestUser = HighestOrderUser
+                 userItemViewModels = userItemViewModels,
+                 HighestUser = HighestOrderUser
             };
 
             return View(viewModel);
         }
 
-        // GET: HomeController1/Details/5
         public ActionResult Details(int id)
         {
             return View();
         }
 
-        // GET: HomeController1/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: HomeController1/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind("Name,Email,Password")] User model)
+        public ActionResult Create(User model)
         {
             try
             {
+                _unitOfWork.UserRepository.CreateUser(model);
+                _unitOfWork.Save();
 
-               /* var user = new User
-                {
-                    Email = "12",
-                    Password = "23123",
-                    Name = "12313",
-                };*/
-               // _dataContext.Add(model);
-               // _dataContext.SaveChanges();
-
-
-                  _userRepository.CreateUser(model);
-
-                //_dataContext.SaveChanges();
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -94,7 +82,7 @@ namespace Product_management.Controllers
         }
 
         // GET: HomeController1/Edit/5
-        public ActionResult Edit(int id)
+        public IActionResult Edit(int id)
         {
             return View();
         }

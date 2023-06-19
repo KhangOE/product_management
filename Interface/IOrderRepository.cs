@@ -8,7 +8,7 @@ namespace Product_management.Interface
     {
         ICollection<Order> GetAll();
         Order GetOrder(int id);
-        bool CreateOrder(Order order, List<OrderItemViewModel> orderItem);
-        bool Save();
+        void CreateOrder(Order order, List<OrderItemViewModel> orderItem);
+       
     }
 }

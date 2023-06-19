@@ -21,30 +21,22 @@ namespace Product_management.Repository
             return _dataContext.Users.FirstOrDefault(u => u.Id == id);
         }
 
-        public bool DeleteUser(User user)
+        public void DeleteUser(User user)
         {
             _dataContext.Users.Remove(user);
-            return Save();
+           
         }
 
-        public bool UpdateUser(User user)
+        public void UpdateUser(User user)
         {
             _dataContext.Update(user);
-            return Save();
+           
         }
 
 
-        public bool CreateUser(User user)
+        public void CreateUser(User user)
         {
             _dataContext.Add(user);
-            return Save();
-
-        }
-
-        public bool Save()
-        {
-            var saved = _dataContext.SaveChanges();
-            return saved > 0 ? true : false;
         }
 
     }

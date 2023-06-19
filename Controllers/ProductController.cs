@@ -4,38 +4,28 @@ using Product_management.Data;
 using Product_management.Interface;
 using Product_management.Models;
 using Product_management.ModelView;
+using Product_management.unitOfWork;
+
 namespace Product_management.Controllers
 {
     public class ProductController : Controller
     {
 
-        // private readonly IProductRepository = new _productRepository;
-        //private DataContext db = new DataContext();
+       
 
-        private readonly ILogger<ProductController> _logger;
-        private readonly IProductRepository _productRepository;
-        private readonly IOrderRepository _orderRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly DataContext _dataContext;
+    
+        public IUnitOfWork _unitOfWork;
 
-        public ProductController(DataContext dataContext,IUserRepository   userRepository ,ILogger<ProductController> logger, IProductRepository productRepository,IOrderRepository orderRepository)
+        public ProductController(IUnitOfWork unitOfWork)
         {
-            _logger = logger;
-            _productRepository = productRepository;
-             _orderRepository = orderRepository;
-                _userRepository = userRepository;
-                _dataContext = dataContext;
-                
+            _unitOfWork = unitOfWork;
         }
-
-
-
-
-
         public ActionResult Index()
         {
 
-            var products = _productRepository.GetAll();
+         //   var products = _productRepository.GetAll();
+          var products = _unitOfWork.ProductRepository.GetAll();
+         // var product = _unitOfWork.p
 
             var curentTime = DateTime.Now;
 
@@ -58,15 +48,11 @@ namespace Product_management.Controllers
                     .Sum(od => od.quantity))
                 .FirstOrDefault();
              
-            
-
             var productViewModel = new ProductViewModel
             {
                products = productItemViewModels,
                HighBoughProduct = highestBoughProduct,
             };
-
-
             return View(productViewModel);
         }
 
@@ -76,27 +62,22 @@ namespace Product_management.Controllers
             return View();
         }
 
-        // GET: ProductController/Create
-        public ActionResult Create()
-        {
-            return View();
+      
+        public IActionResult Create()
+        { 
+            return View(); 
         }
 
-        // POST: ProductController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind("Name,Description,Price")] Product product)
         {
             try
             {
-              //  var user = _userRepository.GetUserById(1);
-              //  var order = new Order()
-              //  {
-             //      UserId = 1
-              //  };
-               // _orderRepository.CreateOrder(order,user,new List<int> { 1, 2, 3 });
-                _productRepository.CreateProduct(product);
-                 return RedirectToAction(nameof(Index));
+              
+               _unitOfWork.ProductRepository.CreateProduct(product);
+               _unitOfWork.Save();
+                return RedirectToAction(nameof(Index));
                // return View();
             }
             catch
@@ -108,8 +89,16 @@ namespace Product_management.Controllers
         // GET: ProductController/Edit/5
         public ActionResult Edit(int id)
         {
-            var product = _productRepository.GetProductById(id);
-            return View(product);
+            //  var product = _productRepository.GetProductById(id);
+
+            var product = _unitOfWork.ProductRepository.GetProductById(id);
+           // var product = null;
+            if (product != null)
+            {
+                return View(product);
+            }
+
+            return NotFound();
         }
 
         // POST: ProductController/Edit/5
@@ -119,6 +108,11 @@ namespace Product_management.Controllers
         {
             try
             {
+                if(_unitOfWork.ProductRepository.GetProductById(id) == null)
+                {
+                    return NotFound();
+                }
+
                 var productToUpdate = new Product
                 {
                     Id = id,
@@ -126,7 +120,7 @@ namespace Product_management.Controllers
                     Description = product.Description,
                     Price = product.Price,
                 };
-                _productRepository.UpdateProduct(productToUpdate);
+                _unitOfWork.ProductRepository.UpdateProduct(productToUpdate);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -135,20 +129,21 @@ namespace Product_management.Controllers
             }
         }
 
-        // GET: ProductController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: ProductController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)
         {
             try
             {
-                _productRepository.DeleteProduct(_productRepository.GetProductById(id));
+               var product = _unitOfWork.ProductRepository.GetProductById(id);
+
+                if (product != null)
+                {
+                    _unitOfWork.ProductRepository.DeleteProduct(product);
+                    _unitOfWork.Save();
+                    return RedirectToAction(nameof(Index));
+                }
+
                 return RedirectToAction(nameof(Index));
             }
             catch
