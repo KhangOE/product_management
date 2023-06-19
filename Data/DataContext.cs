@@ -34,7 +34,7 @@ namespace Product_management.Data
                 .HasOne(e => e.User)
                 .WithMany(e => e.Orders)
                 .HasForeignKey(e => e.UserId)
-                .IsRequired(false   );
+                .IsRequired(false);
         
         /*  modelBuilder.Entity<Order>()
                     .HasOne(p => p.User)

@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using Product_management.Data;
 using Product_management.Interface;
@@ -28,71 +29,29 @@ namespace Product_management.Controllers
         public ActionResult Index()
         {
 
-            var orders = _orderRepository.GetAll().ToList();
+            List<Order> orders = _orderRepository.GetAll().ToList();
 
-           // var orderdail3 = _orderRepository.GetAll().ToList().Select(x => x.OrderDetails.ToList()).ToList();
-            // var orderdetail = _dataContext.OrderDetails.Select(x => x.Product).ToList();
-            //  List<int> ordersum = _orderRepository.GetAll().ToList().Select(x =>  x.OrderDetails.Select(y => y.Product.Price).Sum()).ToList();
-            var oderdetail = _dataContext.OrderDetails.Where(x => x.OrderId == 1).Select(x =>  x.Product.Price ).ToList();
+            var currentTime = DateTime.Now;
+
+            //  highest value of total order
+            int HighestTotalAmoutvalue = orders.Count() != 0 ? orders.Where(x => x.CreateDate.Month == currentTime.Month && x.CreateDate.Year == currentTime.Year)
+                .Max(x => x.Total) : 0;
+
+            // order has most value total
+            Order HighstOrder = orders.Where(x => x.CreateDate.Month == currentTime.Month && currentTime.Year == x.CreateDate.Year)
+                .FirstOrDefault(x => x.Total == HighestTotalAmoutvalue);
 
 
-            int Total(int id)
+            var modelView = new OrderViewModel()
             {
-                var oderdetail = _dataContext.OrderDetails.Where(x => x.OrderId == id).Select(x => x.Product.Price * x.quantity).ToList().Sum();
-                return oderdetail;
-            }
-
-
-            var groupedOrders = _dataContext.OrderDetails
-                .GroupBy(od => od.OrderId)
-                .Select(g => new { OrderId = g.Key, TotalAmount = g.Sum(od => od.Product.Price) }).Select(x => x.TotalAmount).ToList();
-
-
-            DateTime currentDateTime = DateTime.Now;
-            int currentMonth = currentDateTime.Month;
-
-            int highestOrder = orders.Count != 0 ? orders
-           .Where(o => o.CreateDate.Month == currentMonth)
-           .OrderByDescending(o => Total(o.Id))
-           .FirstOrDefault().Id : -1;
-
-
-            int highestUser = _dataContext.Orders
-         .Where(o => o.CreateDate.Month == currentMonth).Select(x => x.UserId)
-         .GroupBy(n => n)
-         .Select(g => new { Number = g.Key, Count = g.Count() })
-         .OrderByDescending(g => g.Count).Select(x => x.Number)
-         .FirstOrDefault();
-            int highestUserTotal = _dataContext.Orders
-         .Where(o => o.CreateDate.Month == currentMonth).Select(x => x.UserId)
-         .GroupBy(n => n)
-         .Select(g => new { Number = g.Key, Count = g.Count() })
-         .OrderByDescending(g => g.Count).Select(x => x.Count)
-         .FirstOrDefault();
-
-
-            List<OrderViewModel> ordersViewModel = orders.Select(
-            x => new OrderViewModel()
-            {
-                highestUserTotal = highestUserTotal,
-                IdH = highestOrder,
-                UserId = x.UserId,
-                id = x.Id,
-                date = x.CreateDate,
-                Total = Total(x.Id),
-                ProductName = groupedOrders,
-                HUserId = highestUser,
-                OrderDetails = _dataContext.OrderDetails.Where(y=> y.OrderId == x.Id )
-                .Select(x => new OrderDetailViewModel { Name = x.Product.Name , price = x.Product.Price * x.quantity,
-                 quantity = x.quantity}).ToList(),
-               // Details = orderdail3 
-            }
-            ).ToList();
-
+                orders = orders,
+                HighestOrder = HighstOrder,
         
-
-
-            return View(ordersViewModel);
+               
+            };
+            return View(modelView);
+          
+          return View();
         }
 
         // GET: HomeController1/Details/5
@@ -123,18 +82,20 @@ namespace Product_management.Controllers
         {
             try
             {
-                
                 var user = _userRepository.GetUserById(createOrderViewModel.UserId);
-                Order order2 = new Order() { 
-                UserId = createOrderViewModel.UserId,
-                User = user,
+
+                var order = new Order()
+                {
+                    
+                    User = user,
+                    UserId = createOrderViewModel.UserId,
+                    Total = createOrderViewModel.TotalAmount,
                 };
+                var Product = _productRepository.GetProductById(1);
 
-
-                _orderRepository.CreateOrder(order2, user, createOrderViewModel.OrderItem);
-               _dataContext.Database.ExecuteSqlRaw("DELETE FROM Carts");
-                _dataContext.SaveChanges();
-                return RedirectToAction(nameof(Index));
+               _orderRepository.CreateOrder(order, createOrderViewModel.OrderItem);
+             
+                return RedirectToAction(nameof(Index)); 
             }
             catch
             {

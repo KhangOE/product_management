@@ -3,9 +3,11 @@
 *@
 @{
     var info = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+    var currentMonth = DateTime.Now.Month;
+   // var highestProduct = Model.HighBoughProduct == null ?  
 }
 @using Product_management.ModelView;
-@model List<ProductViewModel>
+@model ProductViewModel
 
 <table class="table">
     <a class="fw-bolder text-warning" asp-action="Create" >Add Product</a> |
@@ -20,13 +22,15 @@
     </thead>
 
     <tbody>
-        @foreach (var product in Model)
+
+        <div class="fw-bold">Product có lượt mua cao nhất tháng @currentMonth là :  #@Model?.HighBoughProduct?.Id</div>
+        @foreach (var product in Model.products)
         {
-            <tr class="@(product.Id == product.Hbougth ? "bg-black text-white" : "")">
+            <tr>
                 <td>@product.Id</td>
                 <th scope="row">@product.Name</th>
                 <td> @(String.Format(info, "{0:c}", product.Price))</td>
-                   <td>@product.bougth</td>
+                   <td>@product.BoughNumber</td>
                 <td class="d-flex gap-2">
                     <a class="border-1 bg-light py- px-2 border-black"  asp-action="Edit" asp-route-id="@product.Id">Edit</a> |
                     

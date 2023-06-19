@@ -34,56 +34,40 @@ namespace Product_management.Controllers
 
         public ActionResult Index()
         {
-            var products = _productRepository.GetAll().ToList();
-           
-            int luotmua(int id){
-                
-               // return  _productRepository.GetAll().Where(p => p.Id == id);
-               var bougth = _dataContext.OrderDetails.Where(x => x.ProductId == id).Select(x => x.quantity).Sum();
-                return bougth;
-            }
-            DateTime currentDateTime = DateTime.Now;
-            int currentMonth = currentDateTime.Month;
 
-         //   int highestOrder = _dataContext.OrderDetails
-          // .Where(o => o.Order.CreateDate.Month == currentMonth).Select(x => new { x.ProductId, x.quantity })
-           //.GroupBy(n => n.ProductId)
-           //.Select(g => new { Number = g.Key, Count = g.q })
-          // .OrderByDescending(g => g.Count).Select(x => x.Number)
-          // .FirstOrDefault();
+            var products = _productRepository.GetAll();
 
-           var productQuantities = _dataContext.OrderDetails.Count() != 0 ?
-                _dataContext.OrderDetails
-    .GroupBy(item => item.Product)
-    .Select(group => new {
-        Product = group.Key,
-        TotalQuantity = group.Sum(item => item.quantity)
-    }).OrderByDescending(x => x.TotalQuantity).FirstOrDefault().Product.Id : -1;
+            var curentTime = DateTime.Now;
 
-
-         /*   List<ProductViewModel> productViewModel =
-
-         products.Select(x => new ProductViewModel
-         {
-             Id = x.Id,
-             Name = x.Name,
-             Price = x.Price,
-             bougth = luotmua(x.Id),
-             Hbougth = productQuantities.Product.Id,
-         }).ToList(); */
-
-            List<ProductViewModel> productViewModel1 = products
-                .Select(x => new ProductViewModel() { 
-                Id = x.Id,
-                Name = x.Name,
-                Price = x.Price,
-                bougth = luotmua(x.Id),
-                Hbougth = productQuantities,
+            // create modelview wwith bough number
+            var productItemViewModels = products
+                .Select(x => new ProductItemViewModel
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Price = x.Price,
+                    BoughNumber = x.OrderDetails.Where(od => od.Order.CreateDate.Month == curentTime.Month && od.Order.CreateDate.Year == curentTime.Year )
+                   .Sum(x => x.quantity)
                 }).ToList();
 
 
+            //highest product bouogh this month
+            var highestBoughProduct = products
+                .OrderByDescending(p => p.OrderDetails
+                    .Where(od => od.Order.CreateDate.Month == curentTime.Month && od.Order.CreateDate.Year == curentTime.Year)
+                    .Sum(od => od.quantity))
+                .FirstOrDefault();
+             
+            
 
-            return View(productViewModel1);
+            var productViewModel = new ProductViewModel
+            {
+               products = productItemViewModels,
+               HighBoughProduct = highestBoughProduct,
+            };
+
+
+            return View(productViewModel);
         }
 
         // GET: ProductController/Details/5

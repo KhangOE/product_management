@@ -16,7 +16,11 @@ namespace Product_management.Repository
         }
         public ICollection<Order> GetAll()
         {
-            return _dataContext.Orders.ToList();
+            return _dataContext.Orders
+                .Include(x => x.OrderDetails)
+                .ThenInclude(x => x.Product)
+                .Include(x => x.User)
+                .ToList();
         }
 
         public Order GetOrder(int id)
@@ -24,25 +28,29 @@ namespace Product_management.Repository
             return _dataContext.Orders.FirstOrDefault(o => o.Id == id);
         }
 
-        public bool CreateOrder(Order order,User user, List<OrderItemViewModel> orderItemViewModels)
+        public bool CreateOrder(Order order,List<OrderItemViewModel> orderItemViewModels)
 
         {
             //    var order = new Order();
-            
-            foreach (var item in orderItemViewModels)
-            {
-                var OrderDetail = new OrderDetail() {
-                    ProductId = item.ProductId,
-                    quantity = item.Quantity,
-                    Order = order,
-                };
 
-                _dataContext.Add(OrderDetail);
+            foreach (var i in orderItemViewModels)
+            {
+                var orderDetail = new OrderDetail()
+                {
+                    Order = order,
+                    ProductId = i.ProductId,
+                   // Product = Product,
+                    TotalPrice = i.TotalPrice,
+                    UnitPrice = i.UnitPrice,
+                    quantity = i.Quantity,
+                };
+                _dataContext.Add(orderDetail);
             }
 
-            order.User = user;
-            _dataContext.Orders.Add(order);
-            
+            // _dataContext.Add()
+            _dataContext.Add(order);
+            _dataContext.SaveChanges();
+
 
             return Save();
         }

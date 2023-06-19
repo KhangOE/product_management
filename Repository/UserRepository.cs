@@ -14,7 +14,7 @@ namespace Product_management.Repository
         }
 
         public  ICollection<User> GetUsers() {
-            return _dataContext.Users.ToList(); 
+            return _dataContext.Users.Include(x => x.Orders).ToList(); 
         }
         public User GetUserById(int id)
         {

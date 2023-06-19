@@ -2,11 +2,14 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
+    var currentMonth = DateTime.Now.Month;
 }
-@model List<User>
+@model UserViewModel
+@using Product_management.ModelView;
+
 <div>
     
-    
+    <div>User order nhiều nhất tháng @currentMonth là : #@Model?.HighestUser?.Id (@Model?.HighestUser?.Orders?.Count())</div>
         <table class="table">
             <thead>
                 <td>
@@ -15,16 +18,20 @@
                 <td>
                     Name
                 </td>
+                <td>number Ordered</td>
             </thead>
             <tbody>
-            @foreach (var u in Model)
+            @foreach (var u in Model.userItemViewModels)
             {
                 <tr>
                     <td>
-                        @u.Id
+                      @u.Id
                     </td>
                     <td>
                         @u.Name
+                    </td>
+                    <td>
+                        @u.numberOrder
                     </td>
                 </tr>
                

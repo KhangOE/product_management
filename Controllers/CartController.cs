@@ -26,10 +26,10 @@ namespace Product_management.Controllers
             {
                 Id = x.Id,
                 productName = _productRepository.GetProductById(x.ProductId).Name,
-                    price1 = _productRepository.GetProductById(x.ProductId).Price,
+                price1 = _productRepository.GetProductById(x.ProductId).Price,
                 quantity = x.quantity,
                 ProductId = x.ProductId,
-               price = _productRepository.GetProductById(x.ProductId).Price * x.quantity,
+                price = _productRepository.GetProductById(x.ProductId).Price * x.quantity,
 
             }).ToList();
 

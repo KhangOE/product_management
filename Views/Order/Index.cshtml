@@ -2,69 +2,49 @@
     For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 *@
 @{
-
-    var maxId = Model.Count > 0 ? Model[0].IdH : -1;
-    var maxUserId = Model.Count > 0 ? Model[0].HUserId : -1;
-    var maxUserTotal = Model.Count > 0 ? Model[0].highestUserTotal : -1;
-
-    
-    var month = DateTime.Now.Month;
     var info = System.Globalization.CultureInfo.GetCultureInfo("vi-VN");
+    var currentMonth = DateTime.Now.Month;
 }
 @using Product_management.ModelView;
-@model List<OrderViewModel>
-<div class="text-danger">
-    <div class="fw-bolder"> 
-        IdUser Order nhiều lần nhất tháng @month : @maxUserId  (@maxUserTotal)
-    </div>
+@model OrderViewModel
 
-    <div class="fw-bolder">
-        ID Order có total cao nhất tháng  @month  @maxId
-    </div>
-    <div> 
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Name </th>
-                    <th scope="col"> quantity</th>
-                <th scope="col">Price</th>
-               
-            </tr>
-        </thead>
-    @foreach(var m in Model)
-    {
-        <div>
-           
-            
-            <div class="">
-            <tr class="@(m.id == Model[0].IdH ? "bg-black text-white" : "")">
-                <td>@m.id</td> 
-                    <td></td>
-                <td> @m.date</td> 
+<div style="background-color : #F5F5FA">
+
+    <div class="fw-bold">Order có tổng total cao nhất tháng @currentMonth : #@Model?.HighestOrder?.Id (@(String.Format(info, "{0:c}",Model?.HighestOrder?.Total)) )</div>
+        @foreach (var o in Model.orders)
+        {<table class="table" style="background-color : white; border: solid 1px black">
+   
+        <tbody>
+            <div> #@o.Id - @o.CreateDate</div>
+            <div> #@o.UserId - @o.User.Name</div>
+            @foreach (var od in o.OrderDetails)
+            {
+                <tr>
+                    <td>
+                        @od.Product.Name
+                    </td>
+                    <td>
+                         x  @od.quantity
+                    </td>
+                    <td style="text-align:end; padding-right: 30px;">
+                         @(String.Format(info, "{0:c}", od.TotalPrice))
+                        
+                    </td
+
                 </tr>
-                        @foreach (var p in m.OrderDetails)
-                {
-                    
-                    <tr class="bg-light">
-                        <td>@p.Name</td>
-                        <td>@p.quantity</td>
-                        <td>
-                                    @(String.Format(info, "{0:c}", p.price))
-                            </td>
-                    </tr>
-                }
-            <tr class="bg-primary text-white fw-bold">
-                <td>userId = @m.UserId</td>
-                    <td>  </td>
-                    <td> Tổng =  @(String.Format(info, "{0:c}", m.Total))</td>
-               </tr>
-           </div>
+               
+            }
+             <tr>
+                 <td></td>
+                  <td></td>
+                  <td class="fw-bold text-danger" style="text-align:end;padding-right: 30px"> @(String.Format(info, "{0:c}", o.Total))</td>
+                </tr>
+                </tbody>
+</table>
+        }
+    
 
-        </div>
-       
-      
-    }
-
-    </table>
 </div>
+
+  

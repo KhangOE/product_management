@@ -20,9 +20,36 @@ namespace Product_management.Controllers
         }
         public ActionResult Index()
         {
-            _dataContext.Users.ToList();
-            var user = _userRepository.GetUsers();
-            return View(user);
+          
+            var users = _userRepository.GetUsers().ToList();
+
+            var currentTime = DateTime.Now;
+
+            // user has highest number order this month
+            var HighestOrderUser = users
+                .FirstOrDefault(u => u.Orders
+                    .Where(o => o.CreateDate.Month == currentTime.Month && o.CreateDate.Year == currentTime.Year)
+                    .Count()
+                    == users
+                   .Max(x => x.Orders
+                        .Where(o => o.CreateDate.Month == currentTime.Month && o.CreateDate.Year == currentTime.Year)
+                        .Count()));
+
+
+
+            List<UserItemViewModel> userIteViewModels = users.Select(x => new UserItemViewModel
+            {
+                Name = x.Name,
+                Id = x.Id,
+                numberOrder = x.Orders.Count(),
+            }).ToList();
+
+            UserViewModel viewModel = new UserViewModel() { 
+            userItemViewModels = userIteViewModels,
+            HighestUser = HighestOrderUser
+            };
+
+            return View(viewModel);
         }
 
         // GET: HomeController1/Details/5
@@ -45,17 +72,17 @@ namespace Product_management.Controllers
             try
             {
 
-                var user = new User
+               /* var user = new User
                 {
                     Email = "12",
                     Password = "23123",
                     Name = "12313",
-                };
-                _dataContext.Add(model);
-                _dataContext.SaveChanges();
+                };*/
+               // _dataContext.Add(model);
+               // _dataContext.SaveChanges();
 
 
-                //  _userRepository.CreateUser(model);
+                  _userRepository.CreateUser(model);
 
                 //_dataContext.SaveChanges();
                 return RedirectToAction(nameof(Index));

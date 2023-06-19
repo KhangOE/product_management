@@ -6,5 +6,6 @@ namespace Product_management.ModelView
     {
         public int UserId { get; set; }
         public List<OrderItemViewModel> OrderItem { get; set; }
+        public int TotalAmount { get; set; }
     }
 }

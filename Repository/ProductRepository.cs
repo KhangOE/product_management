@@ -1,4 +1,5 @@
-﻿using Product_management.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using Product_management.Data;
 using Product_management.Interface;
 using Product_management.Models;
 
@@ -16,8 +17,11 @@ namespace Product_management.Repository
 
         public ICollection<Product> GetAll()
         {
-            return _context.Products.ToList();
-          
+            return _context.Products
+                .Include(x => x.OrderDetails)
+                .ThenInclude(x => x.Order)
+                .ToList();
+
         }
 
         public Product GetProductById(int id)
