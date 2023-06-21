@@ -13,28 +13,30 @@ namespace Product_management.Repository
             _dataContext = dataContext;
         }
 
-        public  ICollection<User> GetUsers() {
-            return _dataContext.Users.Include(x => x.Orders).ToList(); 
+        public async Task<ICollection<User>> GetUsers() {
+            return await _dataContext.Users.Include(x => x.Orders).ToListAsync(); 
         }
-        public User GetUserById(int id)
+        public async Task<User> GetUserById(int id)
         {
             return _dataContext.Users.FirstOrDefault(u => u.Id == id);
         }
 
-        public void DeleteUser(User user)
+        public async Task DeleteUser(User user)
         {
             _dataContext.Users.Remove(user);
            
         }
 
-        public void UpdateUser(User user)
+      
+
+        public async Task UpdateUser(User user)
         {
             _dataContext.Update(user);
            
         }
 
 
-        public void CreateUser(User user)
+        public async Task CreateUser(User user)
         {
             _dataContext.Add(user);
         }

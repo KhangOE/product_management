@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Product_management.Data;
 using Product_management.Interface;
@@ -19,28 +20,18 @@ namespace Product_management.Controllers
         {
             _unitOfWork = unitOfWork;
         }
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
 
-            List<Order> orders = _unitOfWork.OrderRepository.GetAll().ToList();
+            var orders = await  _unitOfWork.OrderRepository.GetAll();
+            var HighstOrder = await _unitOfWork.OrderRepository.GetHighestAmountOrder();
 
-            var currentTime = DateTime.Now;
-
-            //  highest value of total order
-            int HighestTotalAmoutvalue = !orders
-                .IsNullOrEmpty() ? orders
-                .Where(x => x.CreateDate.Month == currentTime.Month && x.CreateDate.Year == currentTime.Year)
-                .Max(x => x.Total) : 0;
-
-            // order has most value total
-            Order HighstOrder = orders.Where(x => x.CreateDate.Month == currentTime.Month && currentTime.Year == x.CreateDate.Year)
-                .FirstOrDefault(x => x.Total == HighestTotalAmoutvalue);
-
-
-            var modelView = new OrderViewModel()
+            
+            
+            var modelView =   new OrderViewModel()
             {
-                orders = orders,
-                HighestOrder = HighstOrder,       
+               orders =  orders.ToList(),
+               HighestOrder = HighstOrder,       
             };
             return View(modelView);
           
@@ -49,7 +40,7 @@ namespace Product_management.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CreateOrderViewModel createOrderViewModel)
+        public async Task<IActionResult> Create(CreateOrderViewModel createOrderViewModel)
         {
             try
             {
@@ -60,8 +51,8 @@ namespace Product_management.Controllers
                     Total = createOrderViewModel.TotalAmount,
                 };
               
-               _unitOfWork.OrderRepository.CreateOrder(order, createOrderViewModel.OrderItem);
-               _unitOfWork.Save();
+               await _unitOfWork.OrderRepository.CreateOrder(order, createOrderViewModel.OrderItem);
+               await _unitOfWork.SaveChangesAsync();
              
                 return RedirectToAction(nameof(Index)); 
             }
@@ -71,6 +62,29 @@ namespace Product_management.Controllers
             }
         }
 
-       
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int id, IFormCollection collection)
+        {
+            try
+            {
+                var order = await _unitOfWork.OrderRepository.GetOrder(id);
+
+                if (order != null)
+                {
+                    await _unitOfWork.OrderRepository.DeleteOrder(order);
+                    await _unitOfWork.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+
     }
 }

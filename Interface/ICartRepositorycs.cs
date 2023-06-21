@@ -4,10 +4,10 @@ namespace Product_management.Interface
 {
     public interface ICartRepositorycs
     {
-        ICollection<Cart> GetAll();
-        Cart GetCartById(int id);
-        void DeleteCart(Cart cart);
-        void CreateCart(Cart cart);
-        void UpdateCart(Cart cart);
+        Task<ICollection<Cart>> GetAll();
+        Task<Cart> GetCartById(int id);
+        Task DeleteCart(Cart cart);
+        Task CreateCart(Cart cart);
+        Task UpdateCart(Cart cart);
     }
 }

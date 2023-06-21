@@ -4,11 +4,13 @@ namespace Product_management.Interface
 {
     public interface IUserRepository
     {
-        User GetUserById(int id);
-        ICollection<User> GetUsers();
-        void CreateUser(User user);
-        void UpdateUser(User user);
-        void DeleteUser(User user);
+        Task<User> GetUserById(int id);
+
+        
+        Task<ICollection<User>> GetUsers();
+        Task CreateUser(User user);
+        Task UpdateUser(User user);
+        Task DeleteUser(User user);
       
     }
 }

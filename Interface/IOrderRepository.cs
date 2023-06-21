@@ -6,9 +6,13 @@ namespace Product_management.Interface
 {
     public interface IOrderRepository
     {
-        ICollection<Order> GetAll();
-        Order GetOrder(int id);
-        void CreateOrder(Order order, List<OrderItemViewModel> orderItem);
+        Task<ICollection<Order>> GetAll();
+        Task<Order> GetHighestAmountOrder();
+        Task<Product> HighestBoughProduct();
+        Task<User> HighestOrderedUser();
+        Task<Order> GetOrder(int id);
+        Task DeleteOrder(Order order);
+        Task CreateOrder(Order order, List<OrderItemViewModel> orderItem);
        
     }
 }

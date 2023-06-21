@@ -14,27 +14,24 @@ namespace Product_management.Repository
             _dataContext = dataContext;
         }   
 
-        public ICollection<Cart> GetAll()
+        public async Task<ICollection<Cart>> GetAll()
         {
-            return  _dataContext.Carts.ToList();
+            return await _dataContext.Carts.ToListAsync();
         }
 
-        public void DeleteCart(Cart cart)
+        public async Task DeleteCart(Cart cart)
         {
             _dataContext.Remove(cart);
-          
-
         }
-        public void CreateCart(Cart cart)
+        public async Task CreateCart(Cart cart)
         {
            _dataContext.Carts.Add(cart);
-          
         }
-        public Cart  GetCartById(int id)
+        public async Task<Cart>  GetCartById(int id)
         {
-            return _dataContext.Carts.FirstOrDefault(x => x.Id == id);
+            return await _dataContext.Carts.FirstOrDefaultAsync(x => x.Id == id);
         }
-        public void UpdateCart(Cart cart)
+        public async Task UpdateCart(Cart cart)
         {
             _dataContext.Carts.Update(cart);
         }

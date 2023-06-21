@@ -1,14 +1,16 @@
 ﻿using Product_management.Models;
+using Product_management.ModelView;
 
 namespace Product_management.Interface
 {
     public interface IProductRepository
     {
-        ICollection<Product> GetAll();
-        Product GetProductById(int id);
-        void DeleteProduct(Product product);
-        void CreateProduct(Product product);
-        void UpdateProduct(Product product);
+        Task<ICollection<Product>> GetAll();
+        Product HighestBough();
+        Task<Product> GetProductById(int id);
+        Task DeleteProduct(Product product);
+        Task CreateProduct(Product product);
+        Task UpdateProduct(Product product);
        
     }
 }

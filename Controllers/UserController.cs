@@ -20,24 +20,12 @@ namespace Product_management.Controllers
             _unitOfWork = unitOfWork;
             
         }
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
           
-            var users = _unitOfWork.UserRepository.GetUsers().ToList();
+            var users = await _unitOfWork.UserRepository.GetUsers();
 
-            var currentTime = DateTime.Now;
-
-            // user has highest number order this month
-            var HighestOrderUser = users
-                .FirstOrDefault(u => u.Orders
-                    .Where(o => o.CreateDate.Month == currentTime.Month && o.CreateDate.Year == currentTime.Year)
-                    .Count()
-                    == users
-                   .Max(x => x.Orders
-                        .Where(o => o.CreateDate.Month == currentTime.Month && o.CreateDate.Year == currentTime.Year)
-                        .Count()));
-
-
+            var HighestOrderUser = await  _unitOfWork.OrderRepository.HighestOrderedUser();
 
             List<UserItemViewModel> userItemViewModels = users.Select(x => new UserItemViewModel
             {
@@ -48,7 +36,7 @@ namespace Product_management.Controllers
 
             UserViewModel viewModel = new UserViewModel() { 
                  userItemViewModels = userItemViewModels,
-                 HighestUser = HighestOrderUser
+                 HighestUser =  HighestOrderUser
             };
 
             return View(viewModel);

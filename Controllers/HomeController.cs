@@ -23,9 +23,6 @@ namespace Product_management.Controllers
 
         public IActionResult Index()
         {
-            var orders = _orderRepository.GetAll().ToList();
-            DateTime currentMonth = DateTime.Now;
-            List<Order> ordersInCurrentMonth = orders.Where(o => o.CreateDate.Month == currentMonth.Month && o.CreateDate.Year == currentMonth.Year).ToList();
         //    var order = ordersInCurrentMonth.Select(x => new { x.Id, x.OrderDetails.Select(x2 => x2.OrderId)   }) ;
             return View();
         }

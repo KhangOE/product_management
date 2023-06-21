@@ -2,6 +2,7 @@
 using Product_management.Data;
 using Product_management.Interface;
 using Product_management.Models;
+using Product_management.ModelView;
 
 namespace Product_management.Repository
 {
@@ -15,31 +16,58 @@ namespace Product_management.Repository
             _context = context;
         }
 
-        public ICollection<Product> GetAll()
+        public async Task<ICollection<Product>> GetAll()
         {
-            return _context.Products
+            return await _context.Products
                 .Include(x => x.OrderDetails)
                 .ThenInclude(x => x.Order)
-                .ToList();
+                .ToListAsync();
         }
 
-        public Product GetProductById(int id)
+       
+        public  Product HighestBough()
         {
-            return _context.Products.FirstOrDefault(x => x.Id== id);
+            var currentTime = DateTime.Now;
+
+
+            //  var  highestBoughProduct lambda syntax
+            var products = _context.Products.ToList();
+            var HighBoughProduct = products
+              .MaxBy(x => x.OrderDetails.Sum(y => y.quantity));
+
+
+            // in entity syntax
+            var HigBougjProductQuerySyntax = (from product in products
+                                     where product.OrderDetails
+                                           .Sum(x => x.quantity) 
+                                           == products
+                                           .Max(x => x.OrderDetails
+                                                .Sum(x => x.quantity))
+                                     select product).FirstOrDefault();
+                                   
+            return  HighBoughProduct;
         }
 
-        public void DeleteProduct(Product product)
+
+       
+        public async Task<Product> GetProductById(int id)
         {
-            _context.Products.Remove( product );
+            return await _context.Products.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task DeleteProduct(Product product)
+        {
+            
+             _context.Products.Remove(product);
             
         }
-        public void CreateProduct(Product product)
+        public async Task CreateProduct(Product product)
         {
 
            _context.Products.Add(product);
            
         }
-        public void UpdateProduct(Product product) { 
+        public async Task UpdateProduct(Product product) { 
             _context.Update(product);
             
         }

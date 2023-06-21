@@ -11,26 +11,21 @@ namespace Product_management.Controllers
     public class ProductController : Controller
     {
 
-       
-
-    
         public IUnitOfWork _unitOfWork;
-
         public ProductController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
-        public ActionResult Index()
+        public async Task<IActionResult> Index()
         {
-
-         //   var products = _productRepository.GetAll();
-          var products = _unitOfWork.ProductRepository.GetAll();
-         // var product = _unitOfWork.p
+           
+       
+            var products = await _unitOfWork.ProductRepository.GetAll();
 
             var curentTime = DateTime.Now;
 
             // create modelview wwith bough number
-            var productItemViewModels = products
+            var productItemViewModels =  products
                 .Select(x => new ProductItemViewModel
                 {
                     Id = x.Id,
@@ -41,28 +36,17 @@ namespace Product_management.Controllers
                 }).ToList();
 
 
-            //highest product bouogh this month
-            var highestBoughProduct = products
-                .OrderByDescending(p => p.OrderDetails
-                    .Where(od => od.Order.CreateDate.Month == curentTime.Month && od.Order.CreateDate.Year == curentTime.Year)
-                    .Sum(od => od.quantity))
-                .FirstOrDefault();
+            //highest product bough this month
+            Product HighBoughProduct =  await _unitOfWork.OrderRepository.HighestBoughProduct();
              
             var productViewModel = new ProductViewModel
             {
                products = productItemViewModels,
-               HighBoughProduct = highestBoughProduct,
+               HighBoughProduct = HighBoughProduct,
             };
             return View(productViewModel);
         }
 
-        // GET: ProductController/Details/5
-        public ActionResult Details(int id)
-        {
-            return View();
-        }
-
-      
         public IActionResult Create()
         { 
             return View(); 
@@ -70,15 +54,15 @@ namespace Product_management.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind("Name,Description,Price")] Product product)
+        public async Task<IActionResult> Create([Bind("Name,Description,Price")] Product product)
         {
             try
             {
               
-               _unitOfWork.ProductRepository.CreateProduct(product);
-               _unitOfWork.Save();
+               await _unitOfWork.ProductRepository.CreateProduct(product);
+               await _unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-               // return View();
+              
             }
             catch
             {
@@ -87,12 +71,10 @@ namespace Product_management.Controllers
         }
 
         // GET: ProductController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            //  var product = _productRepository.GetProductById(id);
 
-            var product = _unitOfWork.ProductRepository.GetProductById(id);
-           // var product = null;
+            var product = await _unitOfWork.ProductRepository.GetProductById(id);
             if (product != null)
             {
                 return View(product);
@@ -104,24 +86,23 @@ namespace Product_management.Controllers
         // POST: ProductController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, [Bind("Name,Description,Price")] Product product)
+        public async Task<IActionResult> Edit(int id, [Bind("Name,Description,Price")] Product product)
         {
             try
             {
-                if(_unitOfWork.ProductRepository.GetProductById(id) == null)
-                {
-                    return NotFound();
-                }
+             
 
-                var productToUpdate = new Product
-                {
-                    Id = id,
-                    Name = product.Name,
-                    Description = product.Description,
-                    Price = product.Price,
-                };
-                _unitOfWork.ProductRepository.UpdateProduct(productToUpdate);
-                return RedirectToAction(nameof(Index));
+                 await _unitOfWork.ProductRepository.UpdateProduct(new Product
+                  {
+                      Id = id,
+                      Name = product.Name,
+                      Description = product.Description,
+                      Price = product.Price,
+                  });
+                  await _unitOfWork.SaveChangesAsync();
+
+
+                return  RedirectToAction(nameof(Index));
             }
             catch
             {
@@ -131,16 +112,17 @@ namespace Product_management.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
+        public async Task<IActionResult> Delete(int id, IFormCollection collection)
         {
             try
             {
-               var product = _unitOfWork.ProductRepository.GetProductById(id);
+               var product = await _unitOfWork.ProductRepository.GetProductById(id);
 
                 if (product != null)
                 {
-                    _unitOfWork.ProductRepository.DeleteProduct(product);
-                    _unitOfWork.Save();
+                  
+                     await _unitOfWork.ProductRepository.DeleteProduct(product);
+                     await _unitOfWork.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }
 

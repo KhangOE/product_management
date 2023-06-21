@@ -35,23 +35,6 @@ namespace Product_management.Data
                 .WithMany(e => e.Orders)
                 .HasForeignKey(e => e.UserId)
                 .IsRequired(false);
-        
-        /*  modelBuilder.Entity<Order>()
-                    .HasOne(p => p.User)
-                    .WithMany(pc => pc.Orders)
-                    .HasForeignKey(p => p.UserId); */
-
-
-
-
-        /*  modelBuilder.Entity<User>()
-                  .HasMany(g => g.Orders)
-                   .WithOne(s => s.User)
-                   .HasForeignKey(s => s.UserId); */
-
-
-
-
     }
     }
 }

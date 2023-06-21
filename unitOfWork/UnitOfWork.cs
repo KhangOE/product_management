@@ -79,7 +79,10 @@ namespace Product_management.unitOfWork
             _dataContext.SaveChanges();
         }
 
-        
+        public async Task SaveChangesAsync()
+        {
+            await _dataContext.SaveChangesAsync();
+        }
         public async Task<int> CommitChangesAsync() => await _dataContext.SaveChangesAsync();
 
         private bool disposed = false;

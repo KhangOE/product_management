@@ -17,7 +17,11 @@
    
         <tbody>
             <div> #@o.Id - @o.CreateDate</div>
-            <div> #@o.UserId - @o.User.Name</div>
+            <div>User #@o.UserId - @o.User.Name</div>
+              <div> @using (Html.BeginForm("Delete", "Order", new { id = o.Id }, FormMethod.Post))
+                    {
+                        <input  type="submit" value="Delete" />
+                    }</div>
             @foreach (var od in o.OrderDetails)
             {
                 <tr>
