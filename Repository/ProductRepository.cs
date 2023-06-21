@@ -3,6 +3,7 @@ using Product_management.Data;
 using Product_management.Interface;
 using Product_management.Models;
 using Product_management.ModelView;
+using System.Runtime.CompilerServices;
 
 namespace Product_management.Repository
 {
@@ -59,16 +60,19 @@ namespace Product_management.Repository
         {
             
              _context.Products.Remove(product);
+          
             
         }
         public async Task CreateProduct(Product product)
         {
 
            _context.Products.Add(product);
+    
            
         }
         public async Task UpdateProduct(Product product) { 
-            _context.Update(product);
+             _context.Update(product);
+           
             
         }
     }

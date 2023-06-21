@@ -118,15 +118,14 @@ namespace Product_management.Repository
                 {
                     Order = order,
                     ProductId = i.ProductId,
-                   // Product = Product,
                     TotalPrice = i.TotalPrice,
                     UnitPrice = i.UnitPrice,
                     quantity = i.Quantity,
                 };
-                 await _dataContext.AddAsync(orderDetail);
+                  _dataContext.AddAsync(orderDetail);
             }
 
-            // _dataContext.Add()
+           
             _dataContext.Add(order);
             await _dataContext.SaveChangesAsync();
         }
