@@ -14,20 +14,16 @@ namespace Product_management.Controllers
         // GET: HomeController1
        
         private readonly IUnitOfWork _unitOfWork;
-        
 
         public OrderController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
         public async Task<IActionResult> Index()
-        {
-
+        { 
             var orders = await  _unitOfWork.OrderRepository.GetAll();
             var HighstOrder = await _unitOfWork.OrderRepository.GetHighestAmountOrder();
 
-            
-            
             var modelView =   new OrderViewModel()
             {
                orders =  orders.ToList(),
@@ -44,7 +40,6 @@ namespace Product_management.Controllers
         {
             try
             {
-
                 var order = new Order()
                 {
                     UserId = createOrderViewModel.UserId,
@@ -61,7 +56,6 @@ namespace Product_management.Controllers
                 return View();
             }
         }
-
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -84,7 +78,5 @@ namespace Product_management.Controllers
                 return View();
             }
         }
-
-
     }
 }

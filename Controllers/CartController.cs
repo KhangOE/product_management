@@ -51,11 +51,9 @@ namespace Product_management.Controllers
 
                 if(cartItem != null)
                 {
-
                     var cartToUpdate = carts
                      .FirstOrDefault(x => x.ProductId == cart.ProductId);
                     cartToUpdate.quantity += 1 ;
-
                      await _unitOfWork.cartRepositorycs.UpdateCart(cartToUpdate);  
                 }
                 else

@@ -23,6 +23,7 @@ namespace Product_management.Repository
         {
             _dataContext.Remove(cart);
         }
+
         public async Task CreateCart(Cart cart)
         {
            _dataContext.Carts.Add(cart);
@@ -35,6 +36,5 @@ namespace Product_management.Repository
         {
             _dataContext.Carts.Update(cart);
         }
-    
     }
 }

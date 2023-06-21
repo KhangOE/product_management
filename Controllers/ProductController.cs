@@ -18,10 +18,7 @@ namespace Product_management.Controllers
         }
         public async Task<IActionResult> Index()
         {
-           
-       
             var products = await _unitOfWork.ProductRepository.GetAll();
-
             var curentTime = DateTime.Now;
 
             // create modelview wwith bough number
@@ -58,11 +55,9 @@ namespace Product_management.Controllers
         {
             try
             {
-              
-               await _unitOfWork.ProductRepository.CreateProduct(product);
-               await _unitOfWork.SaveChangesAsync();
+                await _unitOfWork.ProductRepository.CreateProduct(product);
+                await _unitOfWork.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
-              
             }
             catch
             {
@@ -90,8 +85,6 @@ namespace Product_management.Controllers
         {
             try
             {
-             
-
                  await _unitOfWork.ProductRepository.UpdateProduct(new Product
                   {
                       Id = id,
@@ -100,8 +93,6 @@ namespace Product_management.Controllers
                       Price = product.Price,
                   });
                   await _unitOfWork.SaveChangesAsync();
-
-
                 return  RedirectToAction(nameof(Index));
             }
             catch

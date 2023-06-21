@@ -27,14 +27,11 @@ namespace Product_management.Repository
            
         }
 
-      
-
         public async Task UpdateUser(User user)
         {
             _dataContext.Update(user);
            
         }
-
 
         public async Task CreateUser(User user)
         {

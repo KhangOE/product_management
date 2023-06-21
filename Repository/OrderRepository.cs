@@ -26,23 +26,23 @@ namespace Product_management.Repository
         public async Task<User> HighestOrderedUser()
         {
             var currentTime = DateTime.Now;
-
             var users =  _dataContext.Users;
-       
+     
             // user has highest number order this month lambda
             var HighestOrderUser = _dataContext.Users.ToList()
                    .MaxBy(x => x.Orders.Count);
 
+           // var maxValue = 
             var query3 = await (from user in users
                           join order in (from order in _dataContext.Orders
                                          where order.CreateDate.Month == currentTime.Month
                                            && order.CreateDate.Year == currentTime.Year
                                          select order)
                           on user.Id equals order.UserId into userGroup
-                          orderby userGroup.Count()
-                          descending
+                          where userGroup.Count() == users.Max(x => x.Orders.Count)
+                         // orderby userGroup.Count()
+                          //descending
                           select user).FirstOrDefaultAsync();
-
             return  query3;
         }
 
@@ -52,9 +52,7 @@ namespace Product_management.Repository
         public async Task<Product> HighestBoughProduct()
         {
             var currentTime = DateTime.Now;
-
             var products = _dataContext.Products;
-       
             var orderdetails =  _dataContext.OrderDetails;
 
             //lambda 
@@ -74,8 +72,6 @@ namespace Product_management.Repository
                                    equals orderdetail.ProductId into productGroup
                                    orderby productGroup.Sum(x => x.quantity)  descending
                                    select product).FirstOrDefaultAsync();
-
-
             return result;
         }
 
@@ -94,7 +90,8 @@ namespace Product_management.Repository
             Order HighstOrderQueryEntity = await (from order in orders
                                             where order.CreateDate.Month == currentTime.Month 
                                                && order.CreateDate.Year == currentTime.Year
-                                            orderby order.Total descending
+                                               && order.Total == orders.Max(x => x.Total)
+                                            //orderby order.Total descending
                                             select order).FirstOrDefaultAsync();
             return HighstOrderQueryEntity;
         }
@@ -108,10 +105,7 @@ namespace Product_management.Repository
         }
 
         public async Task CreateOrder(Order order,List<OrderItemViewModel> orderItemViewModels)
-
         {
-            //    var order = new Order();
-
             foreach (var i in orderItemViewModels)
             {
                 var orderDetail = new OrderDetail()
@@ -124,8 +118,6 @@ namespace Product_management.Repository
                 };
                   _dataContext.AddAsync(orderDetail);
             }
-
-           
             _dataContext.Add(order);
             await _dataContext.SaveChangesAsync();
         }
