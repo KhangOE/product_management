@@ -26,23 +26,23 @@ namespace Product_management.Repository
         public async Task<User> HighestOrderedUser()
         {
             var currentTime = DateTime.Now;
-            var users =  _dataContext.Users;
+            var users =  _dataContext.Users.ToList();
      
             // user has highest number order this month lambda
             var HighestOrderUser = _dataContext.Users.ToList()
                    .MaxBy(x => x.Orders.Count);
 
            // var maxValue = 
-            var query3 = await (from user in users
+            var query3 =  (from user in users
                           join order in (from order in _dataContext.Orders
                                          where order.CreateDate.Month == currentTime.Month
                                            && order.CreateDate.Year == currentTime.Year
                                          select order)
                           on user.Id equals order.UserId into userGroup
                           where userGroup.Count() == users.Max(x => x.Orders.Count)
-                         // orderby userGroup.Count()
+                        //  orderby userGroup.Count()
                           //descending
-                          select user).FirstOrDefaultAsync();
+                          select user).FirstOrDefault();
             return  query3;
         }
 
@@ -52,7 +52,7 @@ namespace Product_management.Repository
         public async Task<Product> HighestBoughProduct()
         {
             var currentTime = DateTime.Now;
-            var products = _dataContext.Products;
+            var products =  await _dataContext.Products.ToListAsync();
             var orderdetails =  _dataContext.OrderDetails;
 
             //lambda 
@@ -63,15 +63,16 @@ namespace Product_management.Repository
                     .Sum(x => x.quantity));
 
             //syntax entity
-            Product query = await (from product in products
+            Product query =   (from product in products
                                    join orderdetail in (from orderDetail in orderdetails
                                                         where orderDetail.Order.CreateDate.Month == currentTime.Month
                                                         && orderDetail.Order.CreateDate.Month == currentTime.Month
                                                         select orderDetail)
                                    on product.Id
                                    equals orderdetail.ProductId into productGroup
-                                   orderby productGroup.Sum(x => x.quantity)  descending
-                                   select product).FirstOrDefaultAsync();
+                                   where productGroup.Sum(x => x.quantity) == products.Max(x => x.OrderDetails.Sum(y => y.quantity))
+                                  // orderby productGroup.Sum(x => x.quantity)  descending
+                                   select product).FirstOrDefault();
             return result;
         }
 
