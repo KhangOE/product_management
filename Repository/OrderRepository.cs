@@ -29,7 +29,6 @@ namespace Product_management.Repository
 
             var users =  _dataContext.Users;
        
-            
             // user has highest number order this month lambda
             var HighestOrderUser = _dataContext.Users.ToList()
                    .MaxBy(x => x.Orders.Count);
@@ -47,7 +46,6 @@ namespace Product_management.Repository
             return  query3;
         }
 
-        //top 10 sản phẩm mua nhiều nhất tháng
      
 
         //sản phẩm được mua nhiều nhất tháng
@@ -68,14 +66,14 @@ namespace Product_management.Repository
 
             //syntax entity
             Product query = await (from product in products
-                         join orderdetail in (from orderDetail in orderdetails
-                                              where orderDetail.Order.CreateDate.Month == currentTime.Month
-                                               && orderDetail.Order.CreateDate.Month == currentTime.Month
-                                              select orderDetail)
-                         on product.Id
-                         equals orderdetail.ProductId into productGroup
-                         orderby productGroup.Sum(x => x.quantity)  descending
-                         select product).FirstOrDefaultAsync();
+                                   join orderdetail in (from orderDetail in orderdetails
+                                                        where orderDetail.Order.CreateDate.Month == currentTime.Month
+                                                        && orderDetail.Order.CreateDate.Month == currentTime.Month
+                                                        select orderDetail)
+                                   on product.Id
+                                   equals orderdetail.ProductId into productGroup
+                                   orderby productGroup.Sum(x => x.quantity)  descending
+                                   select product).FirstOrDefaultAsync();
 
 
             return result;
@@ -85,7 +83,7 @@ namespace Product_management.Repository
         public async Task<Order> GetHighestAmountOrder()
         {
             var currentTime = DateTime.Now;
-            var orders = _dataContext.Orders;
+            var orders =_dataContext.Orders;
             // highest Order in labda syntax
             Order HighstOrderLambda =  _dataContext.Orders.ToList()
                 .Where(x => x.CreateDate.Month == currentTime.Month 
@@ -93,15 +91,13 @@ namespace Product_management.Repository
                 .MaxBy(x => x.Total);
            
             //in entity query syntax
-            Order HighstOrderQueryEntity = (from order in orders
+            Order HighstOrderQueryEntity = await (from order in orders
                                             where order.CreateDate.Month == currentTime.Month 
                                                && order.CreateDate.Year == currentTime.Year
                                             orderby order.Total descending
-                                            select order).FirstOrDefault();
-         
+                                            select order).FirstOrDefaultAsync();
             return HighstOrderQueryEntity;
         }
-
         public async Task DeleteOrder(Order order)
         {
              _dataContext.Remove(order);
