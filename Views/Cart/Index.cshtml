@@ -79,11 +79,11 @@
               <input class="visually-hidden" type="text" name="TotalAmount" value="@total" />
             @for (int i = 0; i < Model.Count ; i++)
             {
-                    <input class="visually-hidden" type="text" name="OrderItem[@i].TotalPrice" value="@Model[i].price" />
+                    <input class="visually-hidden" type="text" name="OrderItem[@i].TotalPrice" value="@Model[i]?.price" />
 
-                    <input class="visually-hidden" type="text" name="OrderItem[@i].UnitPrice" value="@Model[i].price1" />
-                    <input class="visually-hidden" type="text" name="OrderItem[@i].productId" value="@Model[i].ProductId" />
-                    <input class="visually-hidden" type="text" name="OrderItem[@i].Quantity" value="@Model[i].quantity" />
+                    <input class="visually-hidden" type="text" name="OrderItem[@i].UnitPrice" value="@Model[i]?.price1" />
+                    <input class="visually-hidden" type="text" name="OrderItem[@i].productId" value="@Model[i]?.ProductId" />
+                    <input class="visually-hidden" type="text" name="OrderItem[@i].Quantity" value="@Model[i]?.quantity" />
                
             }
             
