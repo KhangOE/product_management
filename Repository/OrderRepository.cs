@@ -24,9 +24,7 @@ namespace Product_management.Repository
                 .ThenInclude(x => x.Product)
                 .Include(x => x.User).ToListAsync();
         }
-
-        // user order nhiều nhất tháng
-                                                                                            
+        // user order nhiều nhất tháng                                                                                     
         public async Task<User> HighestOrderedUser()
         {
             var currentTime = DateTime.Now;
@@ -36,8 +34,6 @@ namespace Product_management.Repository
             // user has highest number order this month lambda
             var HighestOrderUser = _dataContext.Users.ToList()
                    .MaxBy(x => x.Orders.Count);
-
-            
             // var maxValue = 
             var query3 = (from user in users.AsParallel()
                           join order in orders.AsParallel()
@@ -49,7 +45,6 @@ namespace Product_management.Repository
                           select user).FirstOrDefault();
             return query3;
         }
-
         public async Task<List<Product>> TopTenBoughProduct(){
 
             var products =  _dataContext.Products;
@@ -66,11 +61,6 @@ namespace Product_management.Repository
                          on product.Id equals orderDetail.ProductId into productGroup
                          orderby productGroup.Sum(x => x.quantity) descending
                          select product).Take(10).ToList();
-
-
-         
-          
-
             return query;
 
         }
@@ -144,10 +134,6 @@ namespace Product_management.Repository
                                 ,() => new OrderDetail()
                                 ,(od, ct, OdCr) =>
                 {
-                    lock(lockObject) {
-                      
-                    };
-                     Console.WriteLine(od.Quantity);
                      OdCr.TotalPrice = od.TotalPrice;
                      OdCr.UnitPrice = od.UnitPrice;
                      OdCr.ProductId = od.ProductId;
