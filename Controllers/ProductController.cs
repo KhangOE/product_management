@@ -5,16 +5,20 @@ using Product_management.Interface;
 using Product_management.Models;
 using Product_management.ModelView;
 using Product_management.unitOfWork;
-
+using Product_management.ModelsTest;
 namespace Product_management.Controllers
 {
     public class ProductController : Controller
     {
 
         public IUnitOfWork _unitOfWork;
-        public ProductController(IUnitOfWork unitOfWork)
+        public ISer1 _ser1;
+        public IS2 _ser2;
+        public ProductController(IUnitOfWork unitOfWork,ISer1 ser1, IS2 ser2)
         {
             _unitOfWork = unitOfWork;
+            _ser1 = ser1;
+            _ser2 = ser2;
         }
         public async Task<IActionResult> Index()
         {
@@ -22,13 +26,15 @@ namespace Product_management.Controllers
             var curentTime = DateTime.Now;
 
             // create modelview wwith bough number
-            var productItemViewModels =  products
+            var productItemViewModels = products
                 .Select(x => new ProductItemViewModel
                 {
+                    testscoped = _ser2.getRandomNumber(),
+                    test = _ser1.getRandomNumber(),
                     Id = x.Id,
                     Name = x.Name,
                     Price = x.Price,
-                    BoughNumber = x.OrderDetails.Where(od => od.Order.CreateDate.Month == curentTime.Month && od.Order.CreateDate.Year == curentTime.Year )
+                    BoughNumber = x.OrderDetails.Where(od => od.Order.CreateDate.Month == curentTime.Month && od.Order.CreateDate.Year == curentTime.Year)
                    .Sum(x => x.quantity)
                 }).ToList();
 
@@ -51,16 +57,19 @@ namespace Product_management.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Description,Price")] Product product)
+        public async Task<IActionResult> Create(Product product)
         {
+            using var transaction = _unitOfWork.dbTransaction();
             try
             {
                 await _unitOfWork.ProductRepository.CreateProduct(product);
                 await _unitOfWork.SaveChangesAsync();
+                transaction.Commit();
                 return RedirectToAction(nameof(Index));
             }
             catch
-            {
+            {   
+                transaction.Rollback();
                 return View();
             }
         }

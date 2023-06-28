@@ -23,7 +23,8 @@ namespace Product_management.Controllers
           
             var products = await _unitOfWork.ProductRepository.GetAll();
             var carts = await _unitOfWork.cartRepositorycs.GetAll();
-            
+            var f = new Product();
+            f.Description = string.Empty;
             List<CartViewModel> cartViewModel = carts.ToList()
                 .Select(x => new CartViewModel()
                 {

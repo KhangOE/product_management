@@ -1,5 +1,6 @@
 ﻿using Product_management.Data;
 using Product_management.Interface;
+using System.Data;
 
 namespace Product_management.unitOfWork
 {
@@ -9,8 +10,9 @@ namespace Product_management.unitOfWork
         IProductRepository ProductRepository { get;  }
 
         IUserRepository UserRepository { get;  }
-
+        IDbTransaction dbTransaction();
         IOrderRepository OrderRepository { get; }
+        IOrderIDetailRepositorycs OrderDetailRepository { get; }
 
         Task SaveChangesAsync();
 

@@ -13,6 +13,15 @@ namespace Product_management.Repository
 
         public ProductRepository(DataContext context)
         {
+            ParallelLoopResult parallelLoopResult = new ParallelLoopResult(
+                
+                );
+            Action action = () => { 
+            };
+           // IEnumerable<int>  t = new IEnumerable<int>() { 1,2,3,4};
+          //  var b = t.Count();
+            //IEnumerable<int> s = new IEnumerable<int>();
+
             _context = context;
         }
         public async Task<ICollection<Product>> GetAll()

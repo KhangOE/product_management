@@ -25,8 +25,10 @@ namespace Product_management.Repository
         }
         public async Task CreateCart(Cart cart)
         {
+        
            _dataContext.Carts.Add(cart);
         }
+
         public async Task<Cart>  GetCartById(int id)
         {
             return await _dataContext.Carts.FirstOrDefaultAsync(x => x.Id == id);

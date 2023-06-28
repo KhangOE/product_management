@@ -8,7 +8,17 @@
 @using Product_management.ModelView;
 @model OrderViewModel
 
+<div class="text-danger">
+   single @Model.ser1
+</div>
 
+<div class="text-primary">
+  scoped  @Model.ser2
+</div>
+
+<div class="text-warning">
+  transient  @Model.ser3
+</div>
 <div style="background-color : #F5F5FA">
 
     <div class="fw-bold">Order có tổng total cao nhất tháng @currentMonth : #@Model?.HighestOrder?.Id (@(String.Format(info, "{0:c}",Model?.HighestOrder?.Total)) )</div>

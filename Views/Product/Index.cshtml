@@ -10,7 +10,10 @@
 @model ProductViewModel
 
 <table class="table">
-    <a class="fw-bolder text-warning" asp-action="Create" >Add Product</a> |
+    <div class="text-danger">single @Model.products[0].test</div>
+    <div class="text-danger">scoped @Model.products[0].test</div>
+
+    <a class="fw-bolder text-warning" asp-action="Create" >Add Productee</a> |
     <thead>
         <tr>
             <th scope="col">id</th>

@@ -18,13 +18,12 @@ namespace Product_management.Repository
         }
         public async Task<User> GetUserById(int id)
         {
-            return _dataContext.Users.FirstOrDefault(u => u.Id == id);
+            return await _dataContext.Users.FirstOrDefaultAsync(u => u.Id == id);
         }
 
         public async Task DeleteUser(User user)
         {
             _dataContext.Users.Remove(user);
-           
         }
 
         public async Task UpdateUser(User user)

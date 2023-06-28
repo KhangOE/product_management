@@ -3,6 +3,9 @@ using Product_management.Data;
 using Product_management.Interface;
 using Product_management.Models;
 using Product_management.ModelView;
+using System.Reflection.Metadata.Ecma335;
+using System.Security.Cryptography.Xml;
+using System.Transactions;
 
 namespace Product_management.Repository
 {
@@ -23,42 +26,63 @@ namespace Product_management.Repository
         }
 
         // user order nhiều nhất tháng
+                                                                                            
         public async Task<User> HighestOrderedUser()
         {
             var currentTime = DateTime.Now;
             var users = _dataContext.Users.ToList();
+            var orders = _dataContext.Orders;
 
             // user has highest number order this month lambda
             var HighestOrderUser = _dataContext.Users.ToList()
                    .MaxBy(x => x.Orders.Count);
 
+            
             // var maxValue = 
             var query3 = (from user in users
-                          join order in (from order in _dataContext.Orders
-                                         where order.CreateDate.Month == currentTime.Month
-                                           && order.CreateDate.Year == currentTime.Year
-                                         select order)
+                          //.AsParallel()
+                          join order in orders
                           on user.Id equals order.UserId into userGroup
-                          where userGroup.Count() == users.Max(x => x.Orders.Count)
+                          from ug in userGroup.DefaultIfEmpty()
+                          let maxValue = users.Max(x => x.Orders.Count)
+                          where  ug?.CreateDate.Month == currentTime.Month &&
+                          userGroup.Count() == maxValue
+                          // where  userGroup.Count() == users.Max(x => x.Orders.Count)
+                          //orderby user.Id
                           select user).FirstOrDefault();
             return query3;
         }
 
         public async Task<List<Product>> TopTenBoughProduct(){
 
-            var products = _dataContext.Products.ToList();
-            var orderdetails = _dataContext.OrderDetails.ToList();
+            var products =  _dataContext.Products;
+            var orderdetails =  _dataContext.OrderDetails;
 
             var lambda = products.OrderByDescending(p => p.OrderDetails
                                     .Sum(x => x.quantity))
-                                 .ToList()
-                                 .Take(10);
-
-            var query = (from product in products
+                                 .Take(10)
+                                 .ToList();
+                                 
+            var orders = _dataContext .Orders;
+            var query =  (from product in products.AsParallel()
                          join orderDetail in orderdetails 
                          on product.Id equals orderDetail.ProductId into productGroup
                          orderby productGroup.Sum(x => x.quantity) descending
                          select product).Take(10).ToList();
+
+            /*  var queryj = await (from product in products
+                                  join orderDetail in orderdetails
+                                  on product.Id equals orderDetail.ProductId into productGroup
+                                  join order in orders on or
+
+                                 from p in productGroup.DefaultIfEmpty()
+
+                                );*/
+
+         
+            var queryt = (from product in products
+                          orderby product.OrderDetails.Sum(x => x.quantity) descending
+                          select product).FirstOrDefault(); 
 
             return query;
 
@@ -72,21 +96,22 @@ namespace Product_management.Repository
             var orderdetails =  _dataContext.OrderDetails;
 
             //lambda 
-            Product result = products.ToList()
+            Product result = products
+                .AsParallel()
                 .MaxBy(p => p.OrderDetails
                     .Where(x => x.Order.CreateDate.Month == currentTime.Month
                         && x.Order.CreateDate.Year == currentTime.Year)
                     .Sum(x => x.quantity));
 
             //syntax entity
-            Product query = (from product in products
-                             join orderdetail in (from orderDetail in orderdetails
-                                                  where orderDetail.Order.CreateDate.Month == currentTime.Month
-                                                  && orderDetail.Order.CreateDate.Month == currentTime.Month
-                                                  select orderDetail)
+            Product query = (from product in products.AsParallel()
+                             join orderdetail in orderdetails.AsParallel()
                              on product.Id
                              equals orderdetail.ProductId into productGroup
-                             where productGroup.Sum(x => x.quantity) == products.Max(x => x.OrderDetails.Sum(y => y.quantity))
+                             from pG in productGroup.DefaultIfEmpty()
+                             let maxValue = products.Max(x => x.OrderDetails.Sum(y => y.quantity))
+                             where pG?.Order.CreateDate.Month == currentTime.Month                                
+                                   && productGroup.Sum(x => x.quantity) == maxValue
                              select product).FirstOrDefault();
             return query;
         }
@@ -121,20 +146,76 @@ namespace Product_management.Repository
 
         public async Task CreateOrder(Order order,List<OrderItemViewModel> orderItemViewModels)
         {
-            foreach (var i in orderItemViewModels)
+            using var transaction = _dataContext.Database.BeginTransaction();
+            try
             {
-                var orderDetail = new OrderDetail()
+                _dataContext.Orders.Add(order);
+                _dataContext.SaveChanges();
+                Console.WriteLine("start");
+                object lockObject = new object();
+                Parallel.ForEach(orderItemViewModels
+                                ,() => new OrderDetail()
+                                ,(od, ct, OdCr) =>
                 {
-                    Order = order,
-                    ProductId = i.ProductId,
-                    TotalPrice = i.TotalPrice,
-                    UnitPrice = i.UnitPrice,
-                    quantity = i.Quantity,
-                };
-                  _dataContext.AddAsync(orderDetail);
+                     Console.WriteLine(od.Quantity);
+                     OdCr.TotalPrice = od.TotalPrice;
+                     OdCr.UnitPrice = od.UnitPrice;
+                     OdCr.ProductId = od.ProductId;
+                     OdCr.Order = order;
+                     OdCr.quantity = od.Quantity;
+                     //var odtest = new OrderDetail();
+                     return OdCr;
+                     //return odtest;
+                     /*return new OrderDetail()
+                     {
+                       TotalPrice = od.TotalPrice,
+                       UnitPrice = od.UnitPrice,
+                        ProductId = od.ProductId,
+                        Order = order,
+                      quantity = od.Quantity,
+                      };*/
+                     /*
+                     {
+                         TotalPrice = od.TotalPrice,
+                         UnitPrice = od.UnitPrice,
+                         ProductId = od.UnitPrice,
+                         Order = order,
+                         quantity = od.Quantity,
+                     };*/
+
+                 },  
+                  (od) => {
+                     
+                        lock(lockObject) {
+                         Console.WriteLine("add here");
+                         Console.WriteLine(od.quantity);
+                         _dataContext.OrderDetails.Add(od);
+                     }
+                 });
+                Console.WriteLine("end");
+
+               /*   foreach(var od in orderItemViewModels)
+                  {
+                      var orderDetail = new OrderDetail()
+                      {
+                          Order = order,
+                          ProductId = od.ProductId,
+                          TotalPrice = od.TotalPrice,
+                          UnitPrice = od.UnitPrice,
+                          quantity = od.Quantity,
+                      };
+                       _dataContext.Add(orderDetail);
+                  }  */
+                _dataContext.SaveChanges();
+               transaction.Commit(); 
             }
-            _dataContext.Add(order);
-            await _dataContext.SaveChangesAsync();
+            catch (Exception ex)
+            {
+                Console.Write(ex.Message);
+                transaction.Rollback();
+            }
+           
+         
         }
         
     }

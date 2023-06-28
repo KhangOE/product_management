@@ -9,6 +9,7 @@ namespace Product_management.Interface
         Task<ICollection<Order>> GetAll();
         Task<Order> GetHighestAmountOrder();
         Task<Product> HighestBoughProduct();
+        Task<List<Product>> TopTenBoughProduct();
         Task<User> HighestOrderedUser();
         Task<Order> GetOrder(int id);
         Task DeleteOrder(Order order);

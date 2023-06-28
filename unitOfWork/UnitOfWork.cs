@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
 using Product_management.Data;
 using Product_management.Interface;
 using Product_management.Repository;
+using System.Data;
 
 namespace Product_management.unitOfWork
 {
@@ -11,15 +13,17 @@ namespace Product_management.unitOfWork
         private  IOrderRepository _orderRepository;
         private  IUserRepository _userRepository;
         private  ICartRepositorycs _cartRepository;
+        private  IOrderIDetailRepositorycs _orderDetailRepository;
         private readonly DataContext _dataContext;
 
-        public UnitOfWork(IProductRepository productRepository, IOrderRepository orderRepository, IUserRepository userRepository, ICartRepositorycs cartRepository,DataContext dataContext)
+        public UnitOfWork(IOrderIDetailRepositorycs orderIDetailRepositorycs,IProductRepository productRepository, IOrderRepository orderRepository, IUserRepository userRepository, ICartRepositorycs cartRepository,DataContext dataContext)
         {
             _productRepository = productRepository;
             _orderRepository = orderRepository;
             _userRepository = userRepository;
             _cartRepository = cartRepository;
             _dataContext = dataContext;
+            _orderDetailRepository = orderIDetailRepositorycs;
         }
 
         public IProductRepository ProductRepository
@@ -35,6 +39,12 @@ namespace Product_management.unitOfWork
             }
         }
 
+        public IDbTransaction dbTransaction()
+        {
+            var transaction = _dataContext.Database.BeginTransaction();
+
+            return transaction.GetDbTransaction();
+        }
         public IOrderRepository OrderRepository
         {
             get
@@ -45,6 +55,19 @@ namespace Product_management.unitOfWork
 
                 }
                 return _orderRepository;
+            }
+        }
+
+        public IOrderIDetailRepositorycs OrderDetailRepository
+        {
+            get
+            {
+                if (this._orderDetailRepository == null)
+                {
+                    this._orderDetailRepository = new OrderDetailRepository(_dataContext);
+
+                }
+                return _orderDetailRepository;
             }
         }
 
