@@ -39,12 +39,11 @@ namespace Product_management.Repository
 
             
             // var maxValue = 
-            var query3 = (from user in users
-                          //.AsParallel()
-                          join order in orders
+            var query3 = (from user in users.AsParallel()
+                          join order in orders.AsParallel()
                           on user.Id equals order.UserId into userGroup
                           from ug in userGroup.DefaultIfEmpty()
-                          let maxValue = users.Max(x => x.Orders.Count)
+                          let maxValue = users.Max(x => x.Orders.Where(y => y.CreateDate.Month == currentTime.Month).Count())
                           where  ug?.CreateDate.Month == currentTime.Month &&
                           userGroup.Count() == maxValue
                           // where  userGroup.Count() == users.Max(x => x.Orders.Count)
@@ -109,8 +108,8 @@ namespace Product_management.Repository
                              on product.Id
                              equals orderdetail.ProductId into productGroup
                              from pG in productGroup.DefaultIfEmpty()
-                             let maxValue = products.Max(x => x.OrderDetails.Sum(y => y.quantity))
-                             where pG?.Order.CreateDate.Month == currentTime.Month                                
+                             let maxValue = products.Max(x => x.OrderDetails.Where(y => y.Order.CreateDate.Month == currentTime.Month).Sum(y => y.quantity))
+                             where pG?.Order.CreateDate.Month == currentTime.Month
                                    && productGroup.Sum(x => x.quantity) == maxValue
                              select product).FirstOrDefault();
             return query;
