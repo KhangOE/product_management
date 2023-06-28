@@ -46,8 +46,6 @@ namespace Product_management.Repository
                           let maxValue = users.Max(x => x.Orders.Where(y => y.CreateDate.Month == currentTime.Month).Count())
                           where  ug?.CreateDate.Month == currentTime.Month &&
                           userGroup.Count() == maxValue
-                          // where  userGroup.Count() == users.Max(x => x.Orders.Count)
-                          //orderby user.Id
                           select user).FirstOrDefault();
             return query3;
         }
@@ -69,19 +67,9 @@ namespace Product_management.Repository
                          orderby productGroup.Sum(x => x.quantity) descending
                          select product).Take(10).ToList();
 
-            /*  var queryj = await (from product in products
-                                  join orderDetail in orderdetails
-                                  on product.Id equals orderDetail.ProductId into productGroup
-                                  join order in orders on or
-
-                                 from p in productGroup.DefaultIfEmpty()
-
-                                );*/
 
          
-            var queryt = (from product in products
-                          orderby product.OrderDetails.Sum(x => x.quantity) descending
-                          select product).FirstOrDefault(); 
+          
 
             return query;
 
@@ -156,35 +144,18 @@ namespace Product_management.Repository
                                 ,() => new OrderDetail()
                                 ,(od, ct, OdCr) =>
                 {
+                    lock(lockObject) {
+                      
+                    };
                      Console.WriteLine(od.Quantity);
                      OdCr.TotalPrice = od.TotalPrice;
                      OdCr.UnitPrice = od.UnitPrice;
                      OdCr.ProductId = od.ProductId;
                      OdCr.Order = order;
                      OdCr.quantity = od.Quantity;
-                     //var odtest = new OrderDetail();
                      return OdCr;
-                     //return odtest;
-                     /*return new OrderDetail()
-                     {
-                       TotalPrice = od.TotalPrice,
-                       UnitPrice = od.UnitPrice,
-                        ProductId = od.ProductId,
-                        Order = order,
-                      quantity = od.Quantity,
-                      };*/
-                     /*
-                     {
-                         TotalPrice = od.TotalPrice,
-                         UnitPrice = od.UnitPrice,
-                         ProductId = od.UnitPrice,
-                         Order = order,
-                         quantity = od.Quantity,
-                     };*/
-
-                 },  
+                 },
                   (od) => {
-                     
                         lock(lockObject) {
                          Console.WriteLine("add here");
                          Console.WriteLine(od.quantity);
@@ -193,18 +164,6 @@ namespace Product_management.Repository
                  });
                 Console.WriteLine("end");
 
-               /*   foreach(var od in orderItemViewModels)
-                  {
-                      var orderDetail = new OrderDetail()
-                      {
-                          Order = order,
-                          ProductId = od.ProductId,
-                          TotalPrice = od.TotalPrice,
-                          UnitPrice = od.UnitPrice,
-                          quantity = od.Quantity,
-                      };
-                       _dataContext.Add(orderDetail);
-                  }  */
                 _dataContext.SaveChanges();
                transaction.Commit(); 
             }
