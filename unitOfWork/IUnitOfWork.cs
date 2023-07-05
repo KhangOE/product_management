@@ -14,8 +14,8 @@ namespace Product_management.unitOfWork
         IOrderRepository OrderRepository { get; }
         IOrderIDetailRepositorycs OrderDetailRepository { get; }
 
+        IProductCategoryRepository ProductCategoryRepository { get; }
         Task SaveChangesAsync();
-
         ICartRepositorycs cartRepositorycs { get; }
         void Save();
     }

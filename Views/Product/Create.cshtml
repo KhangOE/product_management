@@ -3,8 +3,9 @@
 *@
 @{
 }
+@using Product_management.ModelView;
 
-@model Product
+@model CreateProductModel
 
 
 
@@ -25,6 +26,10 @@
         <label style="min-width: 100px" asp-for="Price" for="Price">Price</label>
         <input asp-for=Price type="text" name="Price" />
         </div>
-        <input type="submit" name="submit" />
+        <input name="CategoryIds[0]" type="text" value="1" /> 
+        <input name="CategoryIds[1]" type="text" value="2" />
+        <input name="CategoryIds[2]" type="text" value="3" />
+
+    <input type="submit" name="submit" />
     @Html.AntiForgeryToken();
     </form>

@@ -85,3 +85,5 @@ D:\my work\cl\Product management\bin\Debug\net6.0\System.CodeDom.dll
 D:\my work\cl\Product management\bin\Debug\net6.0\System.Text.Encodings.Web.dll
 D:\my work\cl\Product management\bin\Debug\net6.0\System.Text.Json.dll
 D:\my work\cl\Product management\bin\Debug\net6.0\runtimes\browser\lib\net6.0\System.Text.Encodings.Web.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Newtonsoft.Json.dll
+D:\my work\cl\Product management\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll

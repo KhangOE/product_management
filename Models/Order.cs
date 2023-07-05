@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Xml.Schema;
 
 namespace Product_management.Models
@@ -13,7 +14,7 @@ namespace Product_management.Models
         [Range(0, int.MaxValue)]
         public int Total { get; set; }
         public DateTime CreateDate { get; set; } = DateTime.Now;
-        public ICollection<OrderDetail> OrderDetails { get; set; }
+        public ICollection<OrderDetail> OrderDetails { get; set; } 
         public User User { get; set; }
         
     }

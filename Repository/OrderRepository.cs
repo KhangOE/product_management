@@ -27,6 +27,7 @@ namespace Product_management.Repository
         // user order nhiều nhất tháng                                                                                     
         public async Task<User> HighestOrderedUser()
         {
+            
             var currentTime = DateTime.Now;
             var users = _dataContext.Users.ToList();
             var orders = _dataContext.Orders;
@@ -40,8 +41,8 @@ namespace Product_management.Repository
                           on user.Id equals order.UserId into userGroup
                           from ug in userGroup.DefaultIfEmpty()
                           let maxValue = users.Max(x => x.Orders.Where(y => y.CreateDate.Month == currentTime.Month).Count())
-                          where  ug?.CreateDate.Month == currentTime.Month &&
-                          userGroup.Count() == maxValue
+                          where  ug?.CreateDate.Month == currentTime.Month 
+                                && userGroup.Count() == maxValue
                           select user).FirstOrDefault();
             return query3;
         }
@@ -100,8 +101,6 @@ namespace Product_management.Repository
             var orders =_dataContext.Orders;
             // highest Order in labda syntax
             Order HighstOrderLambda =  _dataContext.Orders.ToList()
-                .Where(x => x.CreateDate.Month == currentTime.Month 
-                    && currentTime.Year == x.CreateDate.Year)
                 .MaxBy(x => x.Total);
            
             //in entity query syntax
@@ -121,24 +120,35 @@ namespace Product_management.Repository
             return await  _dataContext.Orders.FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public async Task CreateOrder(Order order,List<OrderItemViewModel> orderItemViewModels)
+        public async Task CreateOrder(Order order
+            //,List<OrderItemViewModel> orderItemViewModels
+            )
+
         {
+
+            _dataContext.Add(order);
+            /*
+           // var contxt = new DataContext();
             using var transaction = _dataContext.Database.BeginTransaction();
             try
             {
                 _dataContext.Orders.Add(order);
                 _dataContext.SaveChanges();
+
                 Console.WriteLine("start");
                 object lockObject = new object();
                 Parallel.ForEach(orderItemViewModels
                                 ,() => new OrderDetail()
-                                ,(od, ct, OdCr) =>
+                                , (od, state, OdCr) =>
                 {
+                    Console.WriteLine("start" + od.Quantity);
+                   
                      OdCr.TotalPrice = od.TotalPrice;
                      OdCr.UnitPrice = od.UnitPrice;
                      OdCr.ProductId = od.ProductId;
                      OdCr.Order = order;
                      OdCr.quantity = od.Quantity;
+                     Console.WriteLine("end"+ od.Quantity);
                      return OdCr;
                  },
                   (od) => {
@@ -149,7 +159,6 @@ namespace Product_management.Repository
                      }
                  });
                 Console.WriteLine("end");
-
                 _dataContext.SaveChanges();
                transaction.Commit(); 
             }
@@ -158,8 +167,8 @@ namespace Product_management.Repository
                 Console.Write(ex.Message);
                 transaction.Rollback();
             }
-           
-         
+            finally { _dataContext.Dispose(); } */
+          
         }
         
     }

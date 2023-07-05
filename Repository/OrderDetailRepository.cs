@@ -2,6 +2,7 @@
 using Product_management.Data;
 using Product_management.Interface;
 using Product_management.Models;
+using System.Collections.Concurrent;
 
 namespace Product_management.Repository
 {
@@ -16,9 +17,9 @@ namespace Product_management.Repository
             
         }
 
-       
         public async Task<List<OrderDetail>> GetAll()
-        {
+        {   
+            //ConcurrentBag<Order> orders = _dataContext.Orders.ToList();
             return await _dataContext.OrderDetails.ToListAsync();
         }
 

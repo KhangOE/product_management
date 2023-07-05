@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "0Meru7v0fLkUctgODSmxOWVWHoL6JdmW+TuNvvt0vTLidwwSqp4iQzapNwbTvEAajz1BnBWOMJSSTxs9InaNuA==",
+  "dgSpecHash": "YgstxDuqGx8F7Uugho2tRf5XovYjPnX9XFZhneULVPAH84ZAr3fkoEoHf52theSgz0OnD6CSZQYXCTuVSOXGSw==",
   "success": true,
   "projectFilePath": "D:\\my work\\cl\\Product management\\Product management.csproj",
   "expectedPackageFiles": [
@@ -42,6 +42,8 @@
     "C:\\Users\\khang221\\.nuget\\packages\\microsoft.win32.registry\\5.0.0\\microsoft.win32.registry.5.0.0.nupkg.sha512",
     "C:\\Users\\khang221\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0\\microsoft.win32.systemevents.5.0.0.nupkg.sha512",
     "C:\\Users\\khang221\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
+    "C:\\Users\\khang221\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
+    "C:\\Users\\khang221\\.nuget\\packages\\newtonsoft.json.bson\\1.0.2\\newtonsoft.json.bson.1.0.2.nupkg.sha512",
     "C:\\Users\\khang221\\.nuget\\packages\\system.buffers\\4.5.1\\system.buffers.4.5.1.nupkg.sha512",
     "C:\\Users\\khang221\\.nuget\\packages\\system.codedom\\4.4.0\\system.codedom.4.4.0.nupkg.sha512",
     "C:\\Users\\khang221\\.nuget\\packages\\system.configuration.configurationmanager\\5.0.0\\system.configuration.configurationmanager.5.0.0.nupkg.sha512",

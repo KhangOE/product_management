@@ -6,19 +6,24 @@ using Product_management.Models;
 using Product_management.ModelView;
 using Product_management.unitOfWork;
 using Product_management.ModelsTest;
+using Product_management.Interface.Service;
+
 namespace Product_management.Controllers
 {
     public class ProductController : Controller
     {
 
         public IUnitOfWork _unitOfWork;
+        public IProductService _productService;
         public ISer1 _ser1;
         public IS2 _ser2;
-        public ProductController(IUnitOfWork unitOfWork,ISer1 ser1, IS2 ser2)
-        {
+        public ProductController(IUnitOfWork unitOfWork,ISer1 ser1, IS2 ser2,IProductService productService)
+        { 
+
             _unitOfWork = unitOfWork;
             _ser1 = ser1;
             _ser2 = ser2;
+            _productService = productService;
         }
         public async Task<IActionResult> Index()
         {
@@ -38,7 +43,6 @@ namespace Product_management.Controllers
                    .Sum(x => x.quantity)
                 }).ToList();
 
-
             //highest product bough this month
             Product HighBoughProduct =  await _unitOfWork.OrderRepository.HighestBoughProduct();
              
@@ -57,21 +61,31 @@ namespace Product_management.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Product product)
+        public async Task<IActionResult> Create(CreateProductModel model)
         {
-            using var transaction = _unitOfWork.dbTransaction();
-            try
+
+           
+               try
             {
-                await _unitOfWork.ProductRepository.CreateProduct(product);
-                await _unitOfWork.SaveChangesAsync();
-                transaction.Commit();
+                var product = new Product
+                {
+                    Name = model.Name,
+                    Price = model.Price,
+                    Description = model.Description,
+                    SupplierId = 1,
+                    Available = true,
+                    AddressesIdAvailable = new HashSet<int>() { 1,3,4},
+                };
+                await _productService.Create(product, model.CategoryIds);
+
+          
                 return RedirectToAction(nameof(Index));
-            }
-            catch
-            {   
-                transaction.Rollback();
-                return View();
-            }
+               }
+               catch
+               {   
+                
+                   return View();
+               }
         }
 
         // GET: ProductController/Edit/5

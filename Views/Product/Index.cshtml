@@ -10,8 +10,8 @@
 @model ProductViewModel
 
 <table class="table">
-    <div class="text-danger">single @Model.products[0].test</div>
-    <div class="text-danger">scoped @Model.products[0].test</div>
+   @*<div class="text-danger">single @Model?.products[0]?.test</div>
+    <div class="text-danger">scoped @Model?.products[0]?.test</div>*@
 
     <a class="fw-bolder text-warning" asp-action="Create" >Add Productee</a> |
     <thead>
@@ -49,6 +49,14 @@
                         <input class="visually-hidden" type="text" id="UserId" name="ProductId" value="@product.Id" />
                         <input class="visually-hidden" type="text" id="UserId" name="quantity" value=1 />
                         <input  type="submit" value="Add to cart" />
+                        @Html.AntiForgeryToken();
+                    </form>
+                    <form method="post" action="@Url.Action("SavingProduct", "User")">
+                        <!-- Include additional fields for the order -->
+
+                        <input class="visually-hidden" type="text" id="ProductId" name="ProductId" value="@product.Id" />
+                        <input class="visually-hidden" type="text" id="UserId" name="UserId" value=3 />
+                        <input type="submit" value="Saving user1" />
                         @Html.AntiForgeryToken();
                     </form>
                 </td>

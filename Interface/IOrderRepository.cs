@@ -13,7 +13,7 @@ namespace Product_management.Interface
         Task<User> HighestOrderedUser();
         Task<Order> GetOrder(int id);
         Task DeleteOrder(Order order);
-        Task CreateOrder(Order order, List<OrderItemViewModel> orderItem);
+        Task CreateOrder(Order order);
        
     }
 }

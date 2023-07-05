@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
+using Product_management.Interface.Service;
 using Product_management.Models;
 using Product_management.ModelsTest;
 using Product_management.ModelView;
@@ -10,12 +12,14 @@ namespace Product_management.Controllers
         // GET: HomeController1
        
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IOrderServicecs _orderServicecs;
         public ISer1 _ser1;
         public IS2 _ser2;
         public IS3 _ser3;
-        public OrderController(IUnitOfWork unitOfWork,IS2 ser2, ISer1 ser1, IS3 ser3)
+        public OrderController(IUnitOfWork unitOfWork,IS2 ser2, ISer1 ser1, IS3 ser3,IOrderServicecs orderServicecs)
         {
             _unitOfWork = unitOfWork;
+            _orderServicecs = orderServicecs;   
             _ser1 = ser1;
             _ser2 = ser2;
             _ser3 = ser3;
@@ -64,7 +68,9 @@ namespace Product_management.Controllers
                     UserId = createOrderViewModel.UserId,
                     Total = createOrderViewModel.TotalAmount,
                 };
-               await _unitOfWork.OrderRepository.CreateOrder(order, createOrderViewModel.OrderItem);
+                await _orderServicecs.Create(createOrderViewModel.UserId,createOrderViewModel.TotalAmount, createOrderViewModel.OrderItem);
+            //   await _unitOfWork.OrderRepository.CreateOrder(order, createOrderViewModel.OrderItem);
+             //   await _ser
                return RedirectToAction(nameof(Index)); 
             }
             catch
@@ -80,11 +86,12 @@ namespace Product_management.Controllers
         {
             try
             {
-                var order = await _unitOfWork.OrderRepository.GetOrder(id);
-
+               // var order = await _unitOfWork.OrderRepository.GetOrder(id);
+               var order = await _orderServicecs.GetOrder(id);
                 if (order != null)
                 {
-                    await _unitOfWork.OrderRepository.DeleteOrder(order);
+                    //await _unitOfWork.OrderRepository.DeleteOrder(order);
+                    await _orderServicecs.Delete(order);
                     await _unitOfWork.SaveChangesAsync();
                     return RedirectToAction(nameof(Index));
                 }

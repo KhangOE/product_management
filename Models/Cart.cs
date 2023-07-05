@@ -6,7 +6,7 @@ namespace Product_management.Models
     {
         [Key]
         public int Id { get; set; }
-        public int ProductId { get; set; }
+        public int ProductId { get; set; } 
 
         [Required]
       //  [Range(1,100)]

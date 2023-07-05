@@ -7,23 +7,28 @@ using Product_management.ModelView;
 using Product_management.ModelsTest;
 using Product_management.Repository;
 using Product_management.unitOfWork;
+using Product_management.Interface.Service;
+using Product_management.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
-
-builder.Services.AddTransient<IProductRepository, ProductRepository>();    
-builder.Services.AddTransient<IOrderRepository, OrderRepository>();
-builder.Services.AddTransient<IUserRepository, UserRepository>();
-builder.Services.AddTransient<ICartRepositorycs, CartRepository>();
-builder.Services.AddTransient<IUnitOfWork, UnitOfWork>();
-builder.Services.AddTransient<IOrderIDetailRepositorycs, OrderDetailRepository>();
-
+builder.Services.AddScoped<IProductRepository, ProductRepository>();    
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ICartRepositorycs, CartRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IOrderIDetailRepositorycs, OrderDetailRepository>();
+builder.Services.AddScoped<IOrderServicecs, OrderService>();
+builder.Services.AddScoped<IOrderDetailService,OrderDetailService>();
+builder.Services.AddScoped<IProductCategoryRepository,ProductCategoryRepository>();
+builder.Services.AddScoped<IProductService, ProductService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddSingleton<ISer1, Serv>();
 builder.Services.AddScoped<IS2,Serv>();
-builder.Services.AddTransient<IS3,Serv>();
-builder.Services.Configure<Class>((Class c) =>
+builder.Services.AddScoped<IS3,Serv>();
+builder.Services.Configure((Class c) =>
 {
     c.name = "Test";
     c.age = 10;

@@ -7,6 +7,7 @@ using System.Transactions;
 using Product_management.ModelsTest;
 using Microsoft.Extensions.Options;
 using Product_management.ModelView;
+using Product_management.unitOfWork;
 //using System.Diagnostics;
 
 namespace Product_management.Controllers
@@ -14,6 +15,7 @@ namespace Product_management.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private IUnitOfWork _unitOfWork;
 
         private IOrderRepository _orderRepository;
         private IS2 _serv2;
@@ -23,7 +25,7 @@ namespace Product_management.Controllers
         private DataContext _context;
         private int age;
         private string name;
-        public HomeController(IOptions<Class> option,IS2 s22,IS2 s2,IS3 s3,ISer1 ser1,ILogger<HomeController> logger,IOrderRepository   orderRepository,DataContext context)
+        public HomeController(IUnitOfWork unitOfWork,IOptions<Class> option,IS2 s22,IS2 s2,IS3 s3,ISer1 ser1,ILogger<HomeController> logger,IOrderRepository   orderRepository,DataContext context)
         {
             _logger = logger;
             _orderRepository = orderRepository; 
@@ -35,10 +37,13 @@ namespace Product_management.Controllers
             var _option = option.Value;
             age = _option.age; 
             name = _option.name;
+            _unitOfWork = unitOfWork;
 
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+
+            var user = await _unitOfWork.UserRepository.GetUserById(1);
         //    var order = ordersInCurrentMonth.Select(x => new { x.Id, x.OrderDetails.Select(x2 => x2.OrderId)   }) ;
             return View(new
             {

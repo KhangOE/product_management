@@ -14,9 +14,11 @@ namespace Product_management.unitOfWork
         private  IUserRepository _userRepository;
         private  ICartRepositorycs _cartRepository;
         private  IOrderIDetailRepositorycs _orderDetailRepository;
+        private  IProductCategoryRepository _productCategoryRepository;
+        private  IDisposable _disposed;
         private readonly DataContext _dataContext;
 
-        public UnitOfWork(IOrderIDetailRepositorycs orderIDetailRepositorycs,IProductRepository productRepository, IOrderRepository orderRepository, IUserRepository userRepository, ICartRepositorycs cartRepository,DataContext dataContext)
+        public UnitOfWork(IProductCategoryRepository productCategoryRepository,IOrderIDetailRepositorycs orderIDetailRepositorycs,IProductRepository productRepository, IOrderRepository orderRepository, IUserRepository userRepository, ICartRepositorycs cartRepository,DataContext dataContext)
         {
             _productRepository = productRepository;
             _orderRepository = orderRepository;
@@ -24,6 +26,19 @@ namespace Product_management.unitOfWork
             _cartRepository = cartRepository;
             _dataContext = dataContext;
             _orderDetailRepository = orderIDetailRepositorycs;
+           _productCategoryRepository = productCategoryRepository;
+        }
+
+        public IProductCategoryRepository ProductCategoryRepository
+        {
+            get
+            {
+                if (_productCategoryRepository == null)
+                {
+                    _productCategoryRepository = new ProductCategoryRepository(_dataContext);
+                }
+                return _productCategoryRepository;
+            }
         }
 
         public IProductRepository ProductRepository
